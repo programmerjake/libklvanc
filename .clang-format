@@ -1,0 +1,49 @@
+BasedOnStyle: WebKit
+TabWidth: 8
+IndentWidth: 8
+ColumnLimit: 90
+UseTab: AlignWithSpaces
+ReflowComments: false
+SortIncludes: false
+PointerAlignment: Right
+AlignArrayOfStructures: Right
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterCaseLabel: false
+    AfterControlStatement: MultiLine
+    AfterEnum: false
+    AfterFunction: true
+    AfterStruct: false
+    AfterUnion: false
+    AfterExternBlock: false
+    BeforeElse: false
+    BeforeWhile: false
+    IndentBraces: false
+    SplitEmptyFunction: true
+    SplitEmptyRecord: true
+BreakBeforeTernaryOperators: true
+ContinuationIndentWidth: 4
+IndentCaseBlocks: false
+IndentCaseLabels: false
+IndentGotoLabels: false
+IndentPPDirectives: None
+IndentWrappedFunctionNames: true
+InsertNewlineAtEOF: true
+KeepEmptyLines:
+    AtEndOfFile: false
+    AtStartOfBlock: false
+    AtStartOfFile: false
+LineEnding: LF
+MaxEmptyLinesToKeep: 1
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpacesInSquareBrackets: false
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+    Enabled: true
+    AcrossEmptyLines: false
+    AcrossComments: false
+    AlignCaseColons: false
+AllowShortIfStatementsOnASingleLine: false
+BreakBeforeBinaryOperators: None
+AllowShortFunctionsOnASingleLine: Empty
