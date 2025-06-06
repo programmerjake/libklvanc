@@ -37,6 +37,7 @@ static struct did_s {
 	const char *spec;
 	const char *desc;
 } dids[] = {
+	/* clang-format off */
 	{ 0x00, 0x00,   "S291", "Undefined Data"},
 	{ 0x08, 0x08,   "S353", "MPEG recoding data, VANC space"},
 	{ 0x08, 0x0C,   "S353", "MPEG recoding data, HANC space"},
@@ -139,6 +140,7 @@ static struct did_s dids_t1[] = {
 	{ 0xFE, 0x00,  "S272", "Audio Data in HANC space (SDTV)"},
 	{ 0xFF, 0x00,  "S272", "Audio Data in HANC space (SDTV)"},
 };
+/* clang-format on */
 
 const char *klvanc_didLookupDescription(uint16_t did, uint16_t sdid)
 {
