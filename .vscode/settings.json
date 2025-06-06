@@ -1,6 +1,5 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-
     // Configure glob patterns for excluding files and folders.
     "files.exclude": {
         "**/.git": true,
@@ -31,6 +30,7 @@
         "tools/klvanc_util": true,
         "tools/klvanc_capture": true,
         "tools/klvanc_smpte2038": true,
-    }
-
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
 }
