@@ -36,6 +36,7 @@
 #include "pes_extractor.h"
 #include "version.h"
 #include "hexdump.h"
+#include "platform.h"
 
 #define DEFAULT_FIFOSIZE 1048576
 #define DEFAULT_PID 0x80
@@ -270,7 +271,7 @@ static int _main(int argc, char *argv[])
 		case 'v': ctx->verbose++; break;
 		case 't':
 			ctx->decode_types = optarg;
-			while ((dtype = strsep(&ctx->decode_types, ",")) != NULL) {
+			while ((dtype = strsep_(&ctx->decode_types, ",")) != NULL) {
 				int found = 0;
 				if (strcmp("all", dtype) == 0) {
 					for (int j = 0;

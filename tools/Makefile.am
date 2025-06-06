@@ -8,10 +8,14 @@ AM_CPPFLAGS = -DVERSION=\"$(VERSION)\" -DPROG="\"$(PACKAGE)\"" -D_FILE_OFFSET_BI
 
 AM_CFLAGS = -Wall -O3
 
+if WINDOWS
+LDADD = ../src/libklvanc.la -lpthread
+else
 LDADD = ../src/libklvanc.la -lpthread -ldl
+endif
 
 if DEBUG
-	CFLAGS += -g
+CFLAGS += -g
 endif
 
 SRC  = klvanc_util.c
@@ -29,6 +33,7 @@ SRC += url.c
 SRC += ts_packetizer.c
 SRC += klringbuffer.c
 SRC += pes_extractor.c
+SRC += platform.c
 
 bin_PROGRAMS  = klvanc_util
 bin_PROGRAMS += klvanc_parse
@@ -59,6 +64,7 @@ noinst_HEADERS += ts_packetizer.h
 noinst_HEADERS += udp.h
 noinst_HEADERS += url.h
 noinst_HEADERS += version.h
+noinst_HEADERS += platform.h
 
 test: klvanc_eia708 klvanc_genscte104 klvanc_scte104 klvanc_smpte12_2 klvanc_afd klvanc_smpte2038 klvanc_gensmpte2038
 	./klvanc_eia708
