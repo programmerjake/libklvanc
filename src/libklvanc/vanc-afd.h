@@ -33,13 +33,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-enum klvanc_payload_aspect_ratio_e
-{
+enum klvanc_payload_aspect_ratio_e {
 	ASPECT_UNDEFINED = 0,
 	ASPECT_4x3,
 	ASPECT_16x9,
@@ -48,8 +47,7 @@ enum klvanc_payload_aspect_ratio_e
 /**
  * @brief	TODO - Brief description goes here.
  */
-enum klvanc_payload_afd_e
-{
+enum klvanc_payload_afd_e {
 	AFD_UNDEFINED = 0x00,
 	AFD_BOX_16x9_TOP = 0x02,
 	AFD_BOX_14x9_TOP = 0x03,
@@ -72,8 +70,7 @@ enum klvanc_payload_afd_barflags {
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_afd_s
-{
+struct klvanc_packet_afd_s {
 	struct klvanc_packet_header_s hdr;
 	enum klvanc_payload_aspect_ratio_e aspectRatio;
 	enum klvanc_payload_afd_e afd;
@@ -150,7 +147,8 @@ int klvanc_set_AFD_val(struct klvanc_packet_afd_s *pkt, unsigned char val);
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_AFD_to_words(struct klvanc_packet_afd_s *pkt, uint16_t **words, uint16_t *wordCount);
+int klvanc_convert_AFD_to_words(
+    struct klvanc_packet_afd_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 /**
  * @brief	Convert type struct klvanc_packet_afd_s into a block of bytes which represents\n
@@ -163,10 +161,11 @@ int klvanc_convert_AFD_to_words(struct klvanc_packet_afd_s *pkt, uint16_t **word
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_AFD_to_packetBytes(struct klvanc_packet_afd_s *pkt, uint8_t **bytes, uint16_t *byteCount);
+int klvanc_convert_AFD_to_packetBytes(
+    struct klvanc_packet_afd_s *pkt, uint8_t **bytes, uint16_t *byteCount);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_AFD_H */

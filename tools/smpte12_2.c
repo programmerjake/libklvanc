@@ -35,7 +35,7 @@ static int failCount = 0;
 
 /* CALLBACKS for message notification */
 static int cb_SMPTE_12_2(void *callback_context, struct klvanc_context_s *ctx,
-			 struct klvanc_packet_smpte_12_2_s *pkt)
+    struct klvanc_packet_smpte_12_2_s *pkt)
 {
 	int ret = -1;
 
@@ -64,20 +64,18 @@ static int cb_SMPTE_12_2(void *callback_context, struct klvanc_context_s *ctx,
 	return 0;
 }
 
-static struct klvanc_callbacks_s callbacks =
-{
-	.smpte_12_2	= cb_SMPTE_12_2,
+static struct klvanc_callbacks_s callbacks = {
+	.smpte_12_2 = cb_SMPTE_12_2,
 };
 /* END - CALLBACKS for message notification */
 
-static unsigned char test1[] = {
-	0x00, 0x00, 0x03, 0xff, 0x03, 0xff, 0x02, 0x60, 0x02, 0x60, 0x01, 0x10,
-	0x02, 0x28, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00,
-	0x01, 0x40, 0x02, 0x00, 0x01, 0x20, 0x02, 0x00, 0x02, 0x50, 0x02, 0x00,
-	0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0xa8
-};
+static unsigned char test1[] = { 0x00, 0x00, 0x03, 0xff, 0x03, 0xff, 0x02, 0x60, 0x02,
+	0x60, 0x01, 0x10, 0x02, 0x28, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00,
+	0x02, 0x00, 0x01, 0x40, 0x02, 0x00, 0x01, 0x20, 0x02, 0x00, 0x02, 0x50, 0x02,
+	0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0xa8 };
 
-static int test_smpte_12_2(struct klvanc_context_s *ctx, const uint8_t *buf, size_t bufSize)
+static int test_smpte_12_2(
+    struct klvanc_context_s *ctx, const uint8_t *buf, size_t bufSize)
 {
 	int numWords = bufSize / 2;
 	int mismatch = 0;
@@ -155,12 +153,11 @@ int smpte12_2_main(int argc, char *argv[])
 	if (ret < 0)
 		fprintf(stderr, "SMPTE 12-2 failed to parse\n");
 
-
 	klvanc_context_destroy(ctx);
 	printf("Library destroyed.\n");
 
-	printf("Final result: PASS: %d/%d, Failures: %d\n",
-	       passCount, passCount + failCount, failCount);
+	printf("Final result: PASS: %d/%d, Failures: %d\n", passCount,
+	    passCount + failCount, failCount);
 	if (failCount != 0)
 		return 1;
 	return 0;

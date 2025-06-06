@@ -39,9 +39,9 @@
  * call happens. The buffer passed will be automatically freed upon completion of each callback,
  * under no circumstances attempt to retain it.
  */
-typedef void (*pes_extractor_callback)(void *cb_context, unsigned char *buf, int byteCount);
-struct pes_extractor_s
-{
+typedef void (*pes_extractor_callback)(
+    void *cb_context, unsigned char *buf, int byteCount);
+struct pes_extractor_s {
 	/* Private data. None of these members are considered user visible. */
 	uint16_t pid;
 	KLRingBuffer *rb;
@@ -52,7 +52,8 @@ struct pes_extractor_s
 };
 
 /* PES Extractor mechanism, so convert MULTIPLE TS packets containing PES VANC, into PES array. */
-int pe_alloc(struct pes_extractor_s **pe, void *user_context, pes_extractor_callback cb, uint16_t pid);
+int pe_alloc(struct pes_extractor_s **pe, void *user_context, pes_extractor_callback cb,
+    uint16_t pid);
 
 /* Push one or more transport packets (buffer aligned) into the extraction framework. */
 size_t pe_push(struct pes_extractor_s *pe, unsigned char *pkt, int packetCount);

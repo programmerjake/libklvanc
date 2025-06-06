@@ -33,13 +33,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_kl_u64le_counter_s
-{
+struct klvanc_packet_kl_u64le_counter_s {
 	struct klvanc_packet_header_s hdr;
 	uint64_t counter;
 };
@@ -71,11 +70,11 @@ int klvanc_dump_KL_U64LE_COUNTER(struct klvanc_context_s *ctx, void *p);
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_KL_U64LE_COUNTER_to_words(struct klvanc_packet_kl_u64le_counter_s *pkt,
-					     uint16_t **words, uint16_t *wordCount);
+int klvanc_convert_KL_U64LE_COUNTER_to_words(
+    struct klvanc_packet_kl_u64le_counter_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_KL_U64LE_COUNTER_H */

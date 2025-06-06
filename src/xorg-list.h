@@ -108,7 +108,7 @@
  * head.
  */
 struct xorg_list {
-    struct xorg_list *next, *prev;
+	struct xorg_list *next, *prev;
 };
 
 /**
@@ -119,20 +119,18 @@ struct xorg_list {
  *
  * @param The list to initialized.
  */
-static void
-xorg_list_init(struct xorg_list *list)
+static void xorg_list_init(struct xorg_list *list)
 {
-    list->next = list->prev = list;
+	list->next = list->prev = list;
 }
 
-static inline void
-__xorg_list_add(struct xorg_list *entry,
-                struct xorg_list *prev, struct xorg_list *next)
+static inline void __xorg_list_add(
+    struct xorg_list *entry, struct xorg_list *prev, struct xorg_list *next)
 {
-    next->prev = entry;
-    entry->next = next;
-    entry->prev = prev;
-    prev->next = entry;
+	next->prev = entry;
+	entry->next = next;
+	entry->prev = prev;
+	prev->next = entry;
 }
 
 /**
@@ -150,10 +148,9 @@ __xorg_list_add(struct xorg_list *entry,
  * @param entry The new element to prepend to the list.
  * @param head The existing list.
  */
-static inline void
-xorg_list_add(struct xorg_list *entry, struct xorg_list *head)
+static inline void xorg_list_add(struct xorg_list *entry, struct xorg_list *head)
 {
-    __xorg_list_add(entry, head, head->next);
+	__xorg_list_add(entry, head, head->next);
 }
 
 /**
@@ -171,17 +168,15 @@ xorg_list_add(struct xorg_list *entry, struct xorg_list *head)
  * @param entry The new element to prepend to the list.
  * @param head The existing list.
  */
-static inline void
-xorg_list_append(struct xorg_list *entry, struct xorg_list *head)
+static inline void xorg_list_append(struct xorg_list *entry, struct xorg_list *head)
 {
-    __xorg_list_add(entry, head->prev, head);
+	__xorg_list_add(entry, head->prev, head);
 }
 
-static inline void
-__xorg_list_del(struct xorg_list *prev, struct xorg_list *next)
+static inline void __xorg_list_del(struct xorg_list *prev, struct xorg_list *next)
 {
-    next->prev = prev;
-    prev->next = next;
+	next->prev = prev;
+	prev->next = next;
 }
 
 /**
@@ -198,11 +193,10 @@ __xorg_list_del(struct xorg_list *prev, struct xorg_list *next)
  *
  * @param entry The element to remove.
  */
-static inline void
-xorg_list_del(struct xorg_list *entry)
+static inline void xorg_list_del(struct xorg_list *entry)
 {
-    __xorg_list_del(entry->prev, entry->next);
-    xorg_list_init(entry);
+	__xorg_list_del(entry->prev, entry->next);
+	xorg_list_init(entry);
 }
 
 /**
@@ -213,10 +207,9 @@ xorg_list_del(struct xorg_list *entry)
  *
  * @return True if the list contains one or more elements or False otherwise.
  */
-static inline int
-xorg_list_is_empty(struct xorg_list *head)
+static inline int xorg_list_is_empty(struct xorg_list *head)
 {
-    return head->next == head;
+	return head->next == head;
 }
 
 /**
@@ -233,15 +226,13 @@ xorg_list_is_empty(struct xorg_list *head)
  * @return A pointer to the data struct containing the list head.
  */
 #ifndef container_of
-#define container_of(ptr, type, member) \
-    (type *)((char *)(ptr) - offsetof(type, member))
+#define container_of(ptr, type, member) (type *) ((char *) (ptr) - offsetof(type, member))
 #endif
 
 /**
  * Alias of container_of
  */
-#define xorg_list_entry(ptr, type, member) \
-    container_of(ptr, type, member)
+#define xorg_list_entry(ptr, type, member) container_of(ptr, type, member)
 
 /**
  * Retrieve the first list entry for the given list pointer.
@@ -255,8 +246,8 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param member Member name of the struct xorg_list field in the list element.
  * @return A pointer to the first list element.
  */
-#define xorg_list_first_entry(ptr, type, member) \
-    xorg_list_entry((ptr)->next, type, member)
+#define xorg_list_first_entry(ptr, type, member)                                         \
+	xorg_list_entry((ptr)->next, type, member)
 
 /**
  * Retrieve the last list entry for the given listpointer.
@@ -270,21 +261,18 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param member Member name of the struct xorg_list field in the list element.
  * @return A pointer to the last list element.
  */
-#define xorg_list_last_entry(ptr, type, member) \
-    xorg_list_entry((ptr)->prev, type, member)
+#define xorg_list_last_entry(ptr, type, member) xorg_list_entry((ptr)->prev, type, member)
 
 #ifdef HAVE_TYPEOF
-#define __container_of(ptr, sample, member)			\
-    container_of(ptr, typeof(*sample), member)
+#define __container_of(ptr, sample, member) container_of(ptr, typeof(*sample), member)
 #else
 /* This implementation of __container_of has undefined behavior according
  * to the C standard, but it works in many cases.  If your compiler doesn't
  * support typeof() and fails with this implementation, please try a newer
  * compiler.
  */
-#define __container_of(ptr, sample, member)                            \
-    (void *)((char *)(ptr)                                             \
-            - ((char *)&(sample)->member - (char *)(sample)))
+#define __container_of(ptr, sample, member)                                              \
+	(void *) ((char *) (ptr) - ((char *) &(sample)->member - (char *) (sample)))
 #endif
 
 /**
@@ -304,10 +292,9 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param member Member name of the struct xorg_list in the list elements.
  *
  */
-#define xorg_list_for_each_entry(pos, head, member)				\
-    for (pos = __container_of((head)->next, pos, member);		\
-	 &pos->member != (head);					\
-	 pos = __container_of(pos->member.next, pos, member))
+#define xorg_list_for_each_entry(pos, head, member)                                      \
+	for (pos = __container_of((head)->next, pos, member); &pos->member != (head);    \
+	    pos = __container_of(pos->member.next, pos, member))
 
 /**
  * Loop through the list, keeping a backup pointer to the element. This
@@ -316,11 +303,11 @@ xorg_list_is_empty(struct xorg_list *head)
  *
  * See xorg_list_for_each_entry for more details.
  */
-#define xorg_list_for_each_entry_safe(pos, tmp, head, member)		\
-    for (pos = __container_of((head)->next, pos, member),		\
-	 tmp = __container_of(pos->member.next, pos, member);		\
-	 &pos->member != (head);					\
-	 pos = tmp, tmp = __container_of(pos->member.next, tmp, member))
+#define xorg_list_for_each_entry_safe(pos, tmp, head, member)                            \
+	for (pos = __container_of((head)->next, pos, member),                            \
+	    tmp = __container_of(pos->member.next, pos, member);                         \
+	    &pos->member != (head);                                                      \
+	    pos = tmp, tmp = __container_of(pos->member.next, tmp, member))
 
 /* NULL-Terminated List Interface
  *
@@ -348,8 +335,7 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param list The list element that will be the start of the list
  * @param member Member name of the field pointing to next struct
  */
-#define nt_list_init(_list, _member) \
-	(_list)->_member = NULL
+#define nt_list_init(_list, _member) (_list)->_member = NULL
 
 /**
  * Returns the next element in the list or NULL on termination.
@@ -364,8 +350,7 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param list The list or current element.
  * @param member Member name of the field pointing to next struct.
  */
-#define nt_list_next(_list, _member) \
-	(_list)->_member
+#define nt_list_next(_list, _member) (_list)->_member
 
 /**
  * Iterate through each element in the list.
@@ -380,7 +365,7 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param list The list to iterate through.
  * @param member Member name of the field pointing to next struct.
  */
-#define nt_list_for_each_entry(_entry, _list, _member)			\
+#define nt_list_for_each_entry(_entry, _list, _member)                                   \
 	for (_entry = _list; _entry; _entry = (_entry)->_member)
 
 /**
@@ -395,10 +380,9 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param list The list to iterate through.
  * @param member Member name of the field pointing to next struct.
  */
-#define nt_list_for_each_entry_safe(_entry, _tmp, _list, _member)	\
-	for (_entry = _list, _tmp = (_entry) ? (_entry)->_member : NULL;\
-		_entry;							\
-		_entry = _tmp, _tmp = (_tmp) ? (_tmp)->_member: NULL)
+#define nt_list_for_each_entry_safe(_entry, _tmp, _list, _member)                        \
+	for (_entry = _list, _tmp = (_entry) ? (_entry)->_member : NULL; _entry;         \
+	    _entry = _tmp, _tmp = (_tmp) ? (_tmp)->_member : NULL)
 
 /**
  * Append the element to the end of the list. This macro may be used to
@@ -418,12 +402,14 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param type The list type
  * @param member Member name of the field pointing to next struct
  */
-#define nt_list_append(_entry, _list, _type, _member)		        \
-    do {								\
-	_type *__iterator = _list;					\
-	while (__iterator->_member) { __iterator = __iterator->_member;}\
-	__iterator->_member = _entry;					\
-    } while (0)
+#define nt_list_append(_entry, _list, _type, _member)                                    \
+	do {                                                                             \
+		_type *__iterator = _list;                                               \
+		while (__iterator->_member) {                                            \
+			__iterator = __iterator->_member;                                \
+		}                                                                        \
+		__iterator->_member = _entry;                                            \
+	} while (0)
 
 /**
  * Insert the element at the next position in the list. This macro may be
@@ -442,11 +428,11 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param type The list type
  * @param member Member name of the field pointing to next struct
  */
-#define nt_list_insert(_entry, _list, _type, _member)			\
-    do {								\
-	nt_list_append((_list)->_member, _entry, _type, _member);	\
-	(_list)->_member = _entry;					\
-    } while (0)
+#define nt_list_insert(_entry, _list, _type, _member)                                    \
+	do {                                                                             \
+		nt_list_append((_list)->_member, _entry, _type, _member);                \
+		(_list)->_member = _entry;                                               \
+	} while (0)
 
 /**
  * Delete the entry from the list by iterating through the list and
@@ -463,21 +449,22 @@ xorg_list_is_empty(struct xorg_list *head)
  * @param type The list type
  * @param member Member name of the field pointing to the next entry
  */
-#define nt_list_del(_entry, _list, _type, _member)		\
-	do {							\
-		_type *__e = _entry;				\
-		if (__e == NULL || _list == NULL) break;        \
-		if ((_list) == __e) {				\
-		    _list = __e->_member;			\
-		} else {					\
-		    _type *__prev = _list;			\
-		    while (__prev->_member && __prev->_member != __e)	\
-			__prev = nt_list_next(__prev, _member);	\
-		    if (__prev->_member)			\
-			__prev->_member = __e->_member;		\
-		}						\
-		nt_list_init(__e, _member);			\
-	} while(0)
+#define nt_list_del(_entry, _list, _type, _member)                                       \
+	do {                                                                             \
+		_type *__e = _entry;                                                     \
+		if (__e == NULL || _list == NULL)                                        \
+			break;                                                           \
+		if ((_list) == __e) {                                                    \
+			_list = __e->_member;                                            \
+		} else {                                                                 \
+			_type *__prev = _list;                                           \
+			while (__prev->_member && __prev->_member != __e)                \
+				__prev = nt_list_next(__prev, _member);                  \
+			if (__prev->_member)                                             \
+				__prev->_member = __e->_member;                          \
+		}                                                                        \
+		nt_list_init(__e, _member);                                              \
+	} while (0)
 
 /**
  * DO NOT USE THIS.
@@ -486,7 +473,7 @@ xorg_list_is_empty(struct xorg_list *head)
  * easily get rid of it. Do not use for new code.
  */
 typedef struct generic_list_rec {
-    void *next;
+	void *next;
 } GenericListRec, *GenericListPtr, *glp;
 
 #endif

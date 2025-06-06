@@ -1,4 +1,3 @@
-
 #include <libklvanc/vanc.h>
 
 #include "core-private.h"
@@ -7,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Find spec at 
+// Find spec at
 
 int klvanc_dump_SDP(struct klvanc_context_s *ctx, void *p)
 {
@@ -17,7 +16,7 @@ int klvanc_dump_SDP(struct klvanc_context_s *ctx, void *p)
 	struct klvanc_packet_sdp_s *pkt = p;
 	PRINT_DEBUG("Subtitle Description Packet struct\n");
 	PRINT_DEBUG_MEMBER_INT(pkt->identifier)
-	    PRINT_DEBUG_MEMBER_INT(pkt->format_code);
+	PRINT_DEBUG_MEMBER_INT(pkt->format_code);
 
 	for (int i = 0; i < 5; ++i) {
 		PRINT_DEBUG_MEMBER_INT(pkt->descriptors[i].line);
@@ -34,8 +33,7 @@ int klvanc_dump_SDP(struct klvanc_context_s *ctx, void *p)
 	return KLAPI_OK;
 }
 
-int parse_SDP(struct klvanc_context_s *ctx,
-	      struct klvanc_packet_header_s *hdr, void **pp)
+int parse_SDP(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
 	int i;
 	int payloadBIndex = 0;
@@ -46,12 +44,11 @@ int parse_SDP(struct klvanc_context_s *ctx,
 	if (ctx->verbose)
 		PRINT_DEBUG("%s()\n", __func__);
 
-	if (((hdr->payload[0] & 0x0ff) != 0x51)
-	    || ((hdr->payload[1] & 0x0ff) != 0x15)) {
-//              if (ctx->verbose)
-		PRINT_ERR
-		    ("Identifiers for Subtitling Description Packet don't match: %x %x\n",
-		     hdr->payload[0], hdr->payload[1]);
+	if (((hdr->payload[0] & 0x0ff) != 0x51) || ((hdr->payload[1] & 0x0ff) != 0x15)) {
+		//              if (ctx->verbose)
+		PRINT_ERR(
+		    "Identifiers for Subtitling Description Packet don't match: %x %x\n",
+		    hdr->payload[0], hdr->payload[1]);
 		return -EINVAL;
 	}
 
@@ -63,8 +60,7 @@ int parse_SDP(struct klvanc_context_s *ctx,
 	uint8_t length = hdr->payload[2] & 0x00ff;
 
 	pkt->identifier =
-	    ((uint16_t) (hdr->payload[0] & 0xff)) << 8 | (hdr->
-							  payload[1] & 0xff);
+	    ((uint16_t) (hdr->payload[0] & 0xff)) << 8 | (hdr->payload[1] & 0xff);
 
 	pkt->format_code = hdr->payload[3] & 0xff;
 	for (i = 0; (i < length - 4 - 4) && (i < 5); ++i) {
@@ -77,10 +73,10 @@ int parse_SDP(struct klvanc_context_s *ctx,
 			payloadBIndex++;
 		}
 	}
-	
+
 	pkt->sequence_counter =
-	    ((uint16_t) (hdr->payload[9 + (45 * payloadBIndex) + 1] & 0xff) <<
-	     8) | (hdr->payload[9 + (45 * payloadBIndex) + 2] & 0xff);
+	    ((uint16_t) (hdr->payload[9 + (45 * payloadBIndex) + 1] & 0xff) << 8) |
+	    (hdr->payload[9 + (45 * payloadBIndex) + 2] & 0xff);
 
 	ctx->callbacks->sdp(ctx->callback_context, ctx, pkt);
 

@@ -80,16 +80,17 @@ size_t rb_write(KLRingBuffer *buf, const char *from, size_t bytes)
 	}
 
 	unsigned char *tail = buf->data + ((buf->head + buf->fill) % buf->size);
-	unsigned char *write_end = buf->data + ((buf->head + buf->fill + bytes) % buf->size);
+	unsigned char *write_end =
+	    buf->data + ((buf->head + buf->fill + bytes) % buf->size);
 
 	if (tail <= write_end) {
 		memcpy(tail, from, bytes);
 	} else {
 		unsigned char *end = buf->data + buf->size;
-        
+
 		size_t first_write = end - tail;
 		memcpy(tail, from, first_write);
-        
+
 		size_t second_write = bytes - first_write;
 		memcpy(buf->data, from + first_write, second_write);
 	}
@@ -163,7 +164,7 @@ static size_t rb_reader(KLRingBuffer *buf, char *to, size_t bytes, int advance_r
 	}
 
 	if (advance_read_head)
-		advance_head(buf, bytes); 
+		advance_head(buf, bytes);
 
 	/* When the buffer is empty its a good time to
 	 * free any prior large allocations.
@@ -264,18 +265,14 @@ void rb_fwrite(KLRingBuffer *buf, FILE *fh)
 	fwrite(&head[0], 1, sizeof(head), fh);
 
 	unsigned int rb_len = rb_used(buf);
-	unsigned char hdrlen[4] = {
-		(rb_len >> 24) & 0xff,
-		(rb_len >> 16) & 0xff,
-		(rb_len >>  8) & 0xff,
-		(rb_len >>  0) & 0xff
-	};
+	unsigned char hdrlen[4] = { (rb_len >> 24) & 0xff, (rb_len >> 16) & 0xff,
+		(rb_len >> 8) & 0xff, (rb_len >> 0) & 0xff };
 	fwrite(&hdrlen[0], 1, sizeof(hdrlen), fh);
 
 	unsigned char b[8192];
 	size_t len = 1;
 	while (len) {
-		len = rb_read(buf, (char *)&b[0], sizeof(b));
+		len = rb_read(buf, (char *) &b[0], sizeof(b));
 		if (len)
 			fwrite(&b[0], 1, len, fh);
 	}
@@ -283,4 +280,3 @@ void rb_fwrite(KLRingBuffer *buf, FILE *fh)
 	unsigned char tail[4] = { 'T', 'A', 'I', 'L' };
 	fwrite(&tail[0], 1, sizeof(tail), fh);
 }
-

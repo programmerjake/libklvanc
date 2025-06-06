@@ -34,7 +34,7 @@ static const char *cc_type_lookup(int cc_type)
 	case 0x01: return "NTSC line 21 field 2 CC";
 	case 0x02: return "DTVCC Channel Packet Data";
 	case 0x03: return "DTVCC Channel Packet Start";
-	default: return "Unknown";
+	default:   return "Unknown";
 	}
 }
 
@@ -50,7 +50,7 @@ static const char *cc_framerate_lookup(int frate)
 	case 0x06: return "50";
 	case 0x07: return "59.94";
 	case 0x08: return "60";
-	default: return "Reserved";
+	default:   return "Reserved";
 	}
 }
 
@@ -77,7 +77,7 @@ void klvanc_destroy_eia708_cdp(struct klvanc_packet_eia_708b_s *pkt)
 	free(pkt);
 }
 
-static int gcd (int a, int b)
+static int gcd(int a, int b)
 {
 	int r;
 	while (b > 0) {
@@ -119,16 +119,15 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 	struct klvanc_packet_eia_708b_s *pkt = p;
 
 	if (ctx->verbose)
-		PRINT_DEBUG("%s() %p\n", __func__, (void *)pkt);
+		PRINT_DEBUG("%s() %p\n", __func__, (void *) pkt);
 
 	PRINT_DEBUG(" pkt->header.cdp_identifier = 0x%04x (%s)\n",
-		    pkt->header.cdp_identifier,
-		    pkt->header.cdp_identifier == 0x9669 ? "VALID" : "INVALID");
+	    pkt->header.cdp_identifier,
+	    pkt->header.cdp_identifier == 0x9669 ? "VALID" : "INVALID");
 
 	PRINT_DEBUG_MEMBER_INTI(pkt->header.cdp_length, 1);
 	PRINT_DEBUG(" pkt->header.cdp_frame_rate = 0x%02x (%s FPS)\n",
-		    pkt->header.cdp_frame_rate,
-		    cc_framerate_lookup(pkt->header.cdp_frame_rate));
+	    pkt->header.cdp_frame_rate, cc_framerate_lookup(pkt->header.cdp_frame_rate));
 	PRINT_DEBUG_MEMBER_INTI(pkt->header.time_code_present, 1);
 	PRINT_DEBUG_MEMBER_INTI(pkt->header.ccdata_present, 1);
 	PRINT_DEBUG_MEMBER_INTI(pkt->header.svcinfo_present, 1);
@@ -139,8 +138,8 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 	PRINT_DEBUG_MEMBER_INTI(pkt->header.cdp_hdr_sequence_cntr, 1);
 	if (pkt->header.time_code_present) {
 		PRINT_DEBUG("  pkt->tcdata.time_code_section_id = 0x%02x (%s)\n",
-			    pkt->tc.time_code_section_id,
-			    pkt->tc.time_code_section_id == 0x71 ? "VALID" : "INVALID");
+		    pkt->tc.time_code_section_id,
+		    pkt->tc.time_code_section_id == 0x71 ? "VALID" : "INVALID");
 		PRINT_DEBUG_MEMBER_INTI(pkt->tc.tc_10hrs, 2);
 		PRINT_DEBUG_MEMBER_INTI(pkt->tc.tc_1hrs, 2);
 		PRINT_DEBUG_MEMBER_INTI(pkt->tc.tc_10min, 2);
@@ -152,23 +151,23 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 		PRINT_DEBUG_MEMBER_INTI(pkt->tc.tc_10fr, 2);
 		PRINT_DEBUG_MEMBER_INTI(pkt->tc.tc_1fr, 2);
 		PRINT_DEBUG("  timecode = %02d:%02d:%02d:%02d\n",
-			    pkt->tc.tc_10hrs * 10 + pkt->tc.tc_1hrs,
-			    pkt->tc.tc_10min * 10 + pkt->tc.tc_1min,
-			    pkt->tc.tc_10sec * 10 + pkt->tc.tc_1sec,
-			    pkt->tc.tc_10fr * 10 + pkt->tc.tc_1fr);
+		    pkt->tc.tc_10hrs * 10 + pkt->tc.tc_1hrs,
+		    pkt->tc.tc_10min * 10 + pkt->tc.tc_1min,
+		    pkt->tc.tc_10sec * 10 + pkt->tc.tc_1sec,
+		    pkt->tc.tc_10fr * 10 + pkt->tc.tc_1fr);
 	}
 
 	if (pkt->header.ccdata_present) {
 		PRINT_DEBUG("  pkt->ccdata.ccdata_id = 0x%02x (%s)\n",
-			    pkt->ccdata.ccdata_id,
-			    pkt->ccdata.ccdata_id == 0x72 ? "VALID" : "INVALID");
+		    pkt->ccdata.ccdata_id,
+		    pkt->ccdata.ccdata_id == 0x72 ? "VALID" : "INVALID");
 		PRINT_DEBUG_MEMBER_INTI(pkt->ccdata.cc_count, 2);
 		for (int i = 0; i < pkt->ccdata.cc_count; i++) {
 			PRINT_DEBUG("  pkt->ccdata.cc[%d]\n", i);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccdata.cc[i].cc_valid, 3);
 			PRINT_DEBUG("   pkt->ccdata.cc[i].cc_type = 0x%02x (%s)\n",
-				    pkt->ccdata.cc[i].cc_type,
-				    cc_type_lookup(pkt->ccdata.cc[i].cc_type));
+			    pkt->ccdata.cc[i].cc_type,
+			    cc_type_lookup(pkt->ccdata.cc[i].cc_type));
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccdata.cc[i].cc_data[0], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccdata.cc[i].cc_data[1], 3);
 		}
@@ -176,8 +175,8 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 
 	if (pkt->header.svcinfo_present) {
 		PRINT_DEBUG("  pkt->svcinfo.ccsvcinfo_id = 0x%02x (%s)\n",
-			    pkt->ccsvc.ccsvcinfo_id,
-			    pkt->ccsvc.ccsvcinfo_id == 0x73 ? "VALID" : "INVALID");
+		    pkt->ccsvc.ccsvcinfo_id,
+		    pkt->ccsvc.ccsvcinfo_id == 0x73 ? "VALID" : "INVALID");
 		PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc_info_start, 2);
 		PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc_info_change, 2);
 		PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc_info_complete, 2);
@@ -185,19 +184,22 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 		for (int i = 0; i < pkt->ccsvc.svc_count; i++) {
 			/* Format defined in ATSC A/65:2013 Sec 6.9.2 */
 			PRINT_DEBUG("  pkt->ccsvc.svc[%d]\n", i);
-			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].caption_service_number, 3);
+			PRINT_DEBUG_MEMBER_INTI(
+			    pkt->ccsvc.svc[i].caption_service_number, 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[0], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[1], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[2], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[3], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[4], 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].svc_data_byte[5], 3);
-			PRINT_DEBUG("   pkt->ccsvc.svc[i].language = %s\n", pkt->ccsvc.svc[i].language);
+			PRINT_DEBUG("   pkt->ccsvc.svc[i].language = %s\n",
+			    pkt->ccsvc.svc[i].language);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].digital_cc, 3);
 			if (pkt->ccsvc.svc[i].digital_cc) {
 				PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].csn, 3);
 			} else {
-				PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].line21_field, 3);
+				PRINT_DEBUG_MEMBER_INTI(
+				    pkt->ccsvc.svc[i].line21_field, 3);
 			}
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].easy_reader, 3);
 			PRINT_DEBUG_MEMBER_INTI(pkt->ccsvc.svc[i].wide_aspect_ratio, 3);
@@ -207,20 +209,22 @@ int klvanc_dump_EIA_708B(struct klvanc_context_s *ctx, void *p)
 	/* FIXME: add support for "future_section" (Sec 11.2.7) */
 
 	PRINT_DEBUG(" pkt->footer.cdp_footer_id = 0x%02x (%s)\n",
-		    pkt->footer.cdp_footer_id,
-		    pkt->footer.cdp_footer_id == 0x74 ? "VALID" : "INVALID");
+	    pkt->footer.cdp_footer_id,
+	    pkt->footer.cdp_footer_id == 0x74 ? "VALID" : "INVALID");
 	PRINT_DEBUG(" pkt->footer.cdp_ftr_sequence_cntr = 0x%02x (%s)\n",
-		    pkt->footer.cdp_ftr_sequence_cntr,
-		    pkt->footer.cdp_ftr_sequence_cntr == pkt->header.cdp_hdr_sequence_cntr ? "Matches Header" : "INVALID: does not match header");
+	    pkt->footer.cdp_ftr_sequence_cntr,
+	    pkt->footer.cdp_ftr_sequence_cntr == pkt->header.cdp_hdr_sequence_cntr
+		? "Matches Header"
+		: "INVALID: does not match header");
 
 	PRINT_DEBUG(" pkt->footer.packet_checksum = 0x%02x (%s)\n",
-		    pkt->footer.packet_checksum,
-		    pkt->checksum_valid == 1 ? "VALID" : "INVALID");
+	    pkt->footer.packet_checksum, pkt->checksum_valid == 1 ? "VALID" : "INVALID");
 
 	return KLAPI_OK;
 }
 
-int parse_EIA_708B(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
+int parse_EIA_708B(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
 	struct klbs_context_s *bs;
 	uint8_t next_section_id;
@@ -354,17 +358,23 @@ int parse_EIA_708B(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *
 			klbs_read_bits(bs, 3); /* Marker Bits */
 			pkt->ccsvc.svc[i].caption_service_number = klbs_read_bits(bs, 5);
 			for (int n = 0; n < 6; n++) {
-				pkt->ccsvc.svc[i].svc_data_byte[n] = klbs_read_bits(bs, 8);
+				pkt->ccsvc.svc[i].svc_data_byte[n] =
+				    klbs_read_bits(bs, 8);
 			}
 
-			pkt->ccsvc.svc[i].language[0] = pkt->ccsvc.svc[i].svc_data_byte[0];
-			pkt->ccsvc.svc[i].language[1] = pkt->ccsvc.svc[i].svc_data_byte[1];
-			pkt->ccsvc.svc[i].language[2] = pkt->ccsvc.svc[i].svc_data_byte[2];
+			pkt->ccsvc.svc[i].language[0] =
+			    pkt->ccsvc.svc[i].svc_data_byte[0];
+			pkt->ccsvc.svc[i].language[1] =
+			    pkt->ccsvc.svc[i].svc_data_byte[1];
+			pkt->ccsvc.svc[i].language[2] =
+			    pkt->ccsvc.svc[i].svc_data_byte[2];
 			if (pkt->ccsvc.svc[i].svc_data_byte[3] & 0x80) {
 				pkt->ccsvc.svc[i].digital_cc = 1;
-				pkt->ccsvc.svc[i].csn = pkt->ccsvc.svc[i].svc_data_byte[3] & 0x3f;
+				pkt->ccsvc.svc[i].csn =
+				    pkt->ccsvc.svc[i].svc_data_byte[3] & 0x3f;
 			} else {
-				pkt->ccsvc.svc[i].line21_field = pkt->ccsvc.svc[i].svc_data_byte[3] & 0x01;
+				pkt->ccsvc.svc[i].line21_field =
+				    pkt->ccsvc.svc[i].svc_data_byte[3] & 0x01;
 			}
 			if (pkt->ccsvc.svc[i].svc_data_byte[4] & 0x80)
 				pkt->ccsvc.svc[i].easy_reader = 1;
@@ -412,7 +422,8 @@ void klvanc_finalize_EIA_708B(struct klvanc_packet_eia_708b_s *pkt, uint16_t seq
 	pkt->footer.cdp_ftr_sequence_cntr = seqNum;
 }
 
-int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt, uint8_t **bytes, uint16_t *byteCount)
+int klvanc_convert_EIA_708B_to_packetBytes(
+    struct klvanc_packet_eia_708b_s *pkt, uint8_t **bytes, uint16_t *byteCount)
 {
 	if (!pkt || !bytes) {
 		return -1;
@@ -446,7 +457,7 @@ int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt,
 	klbs_write_bits(bs, 0x01, 1); /* Reserved */
 	klbs_write_bits(bs, pkt->header.cdp_hdr_sequence_cntr, 16);
 
-        if (pkt->header.time_code_present && pkt->tc.time_code_section_id == 0x71) {
+	if (pkt->header.time_code_present && pkt->tc.time_code_section_id == 0x71) {
 		/* timecode_section (Sec 11.2.3) */
 		klbs_write_bits(bs, pkt->tc.time_code_section_id, 8);
 		klbs_write_bits(bs, 0x03, 2); /* Reserved */
@@ -461,7 +472,7 @@ int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt,
 		klbs_write_bits(bs, 0x01, 1); /* Reserved */
 		klbs_write_bits(bs, pkt->tc.tc_10fr, 3);
 		klbs_write_bits(bs, pkt->tc.tc_1fr, 4);
-        }
+	}
 
 	if (pkt->header.ccdata_present && pkt->ccdata.ccdata_id == 0x72) {
 		/* cc_data_section (Sec 11.2.4) */
@@ -489,7 +500,8 @@ int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt,
 			klbs_write_bits(bs, 0x07, 3); /* Marker bits */
 			klbs_write_bits(bs, pkt->ccsvc.svc[i].caption_service_number, 5);
 			for (int n = 0; n < 6; n++) {
-				klbs_write_bits(bs, pkt->ccsvc.svc[i].svc_data_byte[n], 8);
+				klbs_write_bits(
+				    bs, pkt->ccsvc.svc[i].svc_data_byte[n], 8);
 			}
 		}
 	}
@@ -517,7 +529,8 @@ int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt,
 	return 0;
 }
 
-int klvanc_convert_EIA_708B_to_words(struct klvanc_packet_eia_708b_s *pkt, uint16_t **words, uint16_t *wordCount)
+int klvanc_convert_EIA_708B_to_words(
+    struct klvanc_packet_eia_708b_s *pkt, uint16_t **words, uint16_t *wordCount)
 {
 	uint8_t *buf;
 	uint16_t byteCount;

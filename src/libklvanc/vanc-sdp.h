@@ -1,4 +1,3 @@
-
 /**
  * @file	vanc-sdp.h
  * @author	Yves De Muyter <yves@alfavisio.be>, tidy-ups: Steven Toth <stoth@kernellabs.com>
@@ -15,26 +14,21 @@
 extern "C" {
 #endif
 
-enum klvanc_sdp_format_code_e
-{
-	SDP_WSS_TELETEXT = 0x02
-};
+enum klvanc_sdp_format_code_e { SDP_WSS_TELETEXT = 0x02 };
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_sdp_desc_s
-{
-	uint8_t line;  // Line number, only 5 bits
-	uint8_t field; // Field number, only 1 bit, 0 = even field	 
+struct klvanc_sdp_desc_s {
+	uint8_t line; // Line number, only 5 bits
+	uint8_t field; // Field number, only 1 bit, 0 = even field
 	uint8_t data[45]; // WSS Teletext data representing a subtitle line
 };
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_sdp_s
-{
+struct klvanc_packet_sdp_s {
 	struct klvanc_packet_header_s hdr;
 	uint16_t identifier;
 	enum klvanc_sdp_format_code_e format_code;

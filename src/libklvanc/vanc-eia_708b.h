@@ -33,11 +33,9 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
-
-struct klvanc_packet_eia_708b_cdp_header
-{
+struct klvanc_packet_eia_708b_cdp_header {
 	uint16_t cdp_identifier;
 	uint8_t cdp_length;
 	uint8_t cdp_frame_rate;
@@ -48,11 +46,11 @@ struct klvanc_packet_eia_708b_cdp_header
 	uint8_t svc_info_change;
 	uint8_t svc_info_complete;
 	uint8_t caption_service_active;
-	uint16_t cdp_hdr_sequence_cntr;;
+	uint16_t cdp_hdr_sequence_cntr;
+	;
 };
 
-struct klvanc_packet_eia_708b_time_code_section
-{
+struct klvanc_packet_eia_708b_time_code_section {
 	uint8_t time_code_section_id;
 	uint8_t tc_10hrs;
 	uint8_t tc_1hrs;
@@ -66,24 +64,20 @@ struct klvanc_packet_eia_708b_time_code_section
 	uint8_t tc_1fr;
 };
 
-struct klvanc_packet_eia_708b_ccdata_entry
-{
+struct klvanc_packet_eia_708b_ccdata_entry {
 	uint8_t cc_valid;
 	uint8_t cc_type;
 	uint8_t cc_data[2];
 };
 
 #define KLVANC_MAX_CC_COUNT 30
-struct klvanc_packet_eia_708b_ccdata_section
-{
+struct klvanc_packet_eia_708b_ccdata_section {
 	uint8_t ccdata_id;
 	uint8_t cc_count;
 	struct klvanc_packet_eia_708b_ccdata_entry cc[KLVANC_MAX_CC_COUNT];
 };
 
-
-struct klvanc_packet_eia_708b_ccsvcinfo_entry
-{
+struct klvanc_packet_eia_708b_ccsvcinfo_entry {
 	uint8_t caption_service_number;
 	uint8_t svc_data_byte[6]; /* Raw bytes */
 	/* Decoding of svc_data_bytes defined in ATSC A/65 Sec 6.9.2 */
@@ -93,12 +87,10 @@ struct klvanc_packet_eia_708b_ccsvcinfo_entry
 	uint8_t line21_field;
 	uint8_t easy_reader;
 	uint8_t wide_aspect_ratio;
-
 };
 
 #define KLVANC_MAX_CCSVC_COUNT 16
-struct klvanc_packet_eia_708b_ccsvcinfo_section
-{
+struct klvanc_packet_eia_708b_ccsvcinfo_section {
 	uint8_t ccsvcinfo_id;
 	uint8_t svc_info_start;
 	uint8_t svc_info_change;
@@ -107,8 +99,7 @@ struct klvanc_packet_eia_708b_ccsvcinfo_section
 	struct klvanc_packet_eia_708b_ccsvcinfo_entry svc[KLVANC_MAX_CCSVC_COUNT];
 };
 
-struct klvanc_packet_eia_708b_cdp_footer
-{
+struct klvanc_packet_eia_708b_cdp_footer {
 	uint8_t cdp_footer_id;
 	uint16_t cdp_ftr_sequence_cntr;
 	uint8_t packet_checksum;
@@ -117,8 +108,7 @@ struct klvanc_packet_eia_708b_cdp_footer
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_eia_708b_s
-{
+struct klvanc_packet_eia_708b_s {
 	struct klvanc_packet_header_s hdr;
 	uint8_t payload[256];
 	unsigned int payloadLengthBytes;
@@ -180,7 +170,8 @@ void klvanc_finalize_EIA_708B(struct klvanc_packet_eia_708b_s *pkt, uint16_t seq
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_EIA_708B_to_words(struct klvanc_packet_eia_708b_s *pkt, uint16_t **words, uint16_t *wordCount);
+int klvanc_convert_EIA_708B_to_words(
+    struct klvanc_packet_eia_708b_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 /**
  * @brief	Convert type struct klvanc_packet_eia_708b_s into a block of bytes which represents\n
@@ -193,11 +184,11 @@ int klvanc_convert_EIA_708B_to_words(struct klvanc_packet_eia_708b_s *pkt, uint1
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_EIA_708B_to_packetBytes(struct klvanc_packet_eia_708b_s *pkt, uint8_t **bytes, uint16_t *byteCount);
-
+int klvanc_convert_EIA_708B_to_packetBytes(
+    struct klvanc_packet_eia_708b_s *pkt, uint8_t **bytes, uint16_t *byteCount);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_EIA_708B_H */

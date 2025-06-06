@@ -42,12 +42,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define KLRINGBUFFER_STATUS(rb) \
-        printf("rb.size = %zu rb.remain = %zu rb.used = %zu\n", \
-		rb_size(rb), rb_remain(rb), rb_used(rb)); \
+#define KLRINGBUFFER_STATUS(rb)                                                          \
+	printf("rb.size = %zu rb.remain = %zu rb.used = %zu\n", rb_size(rb),             \
+	    rb_remain(rb), rb_used(rb));
 
-typedef struct
-{
+typedef struct {
 	unsigned char *data;
 	size_t size;
 	size_t size_max;
@@ -60,32 +59,32 @@ KLRingBuffer *rb_new(size_t size, size_t size_max);
 
 static inline bool rb_is_empty(KLRingBuffer *buf)
 {
-    return buf->fill == 0;
+	return buf->fill == 0;
 }
 
 static inline bool rb_is_full(KLRingBuffer *buf)
 {
-    return buf->fill == buf->size;
+	return buf->fill == buf->size;
 }
 
 static inline size_t rb_size(KLRingBuffer *buf)
 {
-    return buf->size;
+	return buf->size;
 }
 
 static inline size_t rb_used(KLRingBuffer *buf)
 {
-    return buf->fill;
+	return buf->fill;
 }
 
 static inline size_t rb_remain(KLRingBuffer *buf)
 {
-    return buf->size - buf->fill;
+	return buf->size - buf->fill;
 }
 
 static inline void rb_empty(KLRingBuffer *buf)
 {
-    buf->head = buf->fill = 0;
+	buf->head = buf->fill = 0;
 }
 
 size_t rb_write(KLRingBuffer *buf, const char *from, size_t bytes);

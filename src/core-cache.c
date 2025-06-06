@@ -32,39 +32,40 @@
 int klvanc_cache_alloc(struct klvanc_context_s *ctx)
 {
 	ctx->cacheLines = calloc(0x10000, sizeof(struct klvanc_cache_s));
-    if (!ctx->cacheLines)
-        return -1;
+	if (!ctx->cacheLines)
+		return -1;
 
-    return 0;
+	return 0;
 }
 
 void klvanc_cache_free(struct klvanc_context_s *ctx)
 {
-    /* Free any cached lines otherwise we'll memory leak. */
-    klvanc_cache_reset(ctx);
+	/* Free any cached lines otherwise we'll memory leak. */
+	klvanc_cache_reset(ctx);
 
-    if (ctx->cacheLines) {
-	    free(ctx->cacheLines);
-        ctx->cacheLines = 0;
-    }
+	if (ctx->cacheLines) {
+		free(ctx->cacheLines);
+		ctx->cacheLines = 0;
+	}
 }
 
-struct klvanc_cache_s * klvanc_cache_lookup(struct klvanc_context_s *ctx, uint8_t didnr, uint8_t sdidnr)
+struct klvanc_cache_s *klvanc_cache_lookup(
+    struct klvanc_context_s *ctx, uint8_t didnr, uint8_t sdidnr)
 {
-    if (!ctx)
-        return NULL;
-    if (!ctx->cacheLines)
-        return NULL;
+	if (!ctx)
+		return NULL;
+	if (!ctx->cacheLines)
+		return NULL;
 
-    return &ctx->cacheLines[ (((didnr) << 8) | (sdidnr)) ];
+	return &ctx->cacheLines[(((didnr) << 8) | (sdidnr))];
 };
 
 int klvanc_cache_update(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *pkt)
 {
-    if (!ctx)
-        return -1;
-    if (!ctx->cacheLines)
-        return -1;
+	if (!ctx)
+		return -1;
+	if (!ctx->cacheLines)
+		return -1;
 	if (pkt->did > 0xff)
 		return -1;
 	if (pkt->dbnsdid > 0xff)
@@ -81,7 +82,7 @@ int klvanc_cache_update(struct klvanc_context_s *ctx, struct klvanc_packet_heade
 	}
 	gettimeofday(&s->lastUpdated, NULL);
 
-	struct klvanc_cache_line_s *line = &s->lines[ pkt->lineNr ];
+	struct klvanc_cache_line_s *line = &s->lines[pkt->lineNr];
 	line->active = 1;
 	s->activeCount++;
 
@@ -100,10 +101,10 @@ int klvanc_cache_update(struct klvanc_context_s *ctx, struct klvanc_packet_heade
 
 void klvanc_cache_reset(struct klvanc_context_s *ctx)
 {
-    if (!ctx)
-        return;
-    if (!ctx->cacheLines)
-        return;
+	if (!ctx)
+		return;
+	if (!ctx->cacheLines)
+		return;
 
 	for (int d = 0; d <= 0xff; d++) {
 		for (int s = 0; s <= 0xff; s++) {
@@ -114,7 +115,7 @@ void klvanc_cache_reset(struct klvanc_context_s *ctx)
 			e->activeCount = 0;
 
 			for (int l = 0; l < 2048; l++) {
-				struct klvanc_cache_line_s *line = &e->lines[ l ];
+				struct klvanc_cache_line_s *line = &e->lines[l];
 				if (!line->active)
 					continue;
 

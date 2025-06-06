@@ -68,9 +68,8 @@ static int url_argsplit(char *arg, char **tag, char **value)
 static int regex_match(const char *str, const char *pattern)
 {
 	int ret = -1;
-        regex_t rex;
+	regex_t rex;
 	if (regcomp(&rex, pattern, REG_EXTENDED | REG_NOSUB | REG_ICASE) == 0) {
-
 		if (regexec(&rex, str, 0, 0, 0) == REG_NOMATCH) {
 			ret = -1;
 		} else {
@@ -86,11 +85,10 @@ void url_print(struct url_opts_s *url)
 {
 	printf("url = %s\n", url->url);
 	printf("\tprotocol = %s\n", url->protocol);
-	printf("\tprotocol_type = %d [ %s ]\n",
-		url->protocol_type,
-		url->protocol_type == P_UDP ? "P_UDP" :
-		url->protocol_type == P_RTP ? "P_RTP" : "UNDEFINED"
-		);
+	printf("\tprotocol_type = %d [ %s ]\n", url->protocol_type,
+	    url->protocol_type == P_UDP       ? "P_UDP"
+		: url->protocol_type == P_RTP ? "P_RTP"
+					      : "UNDEFINED");
 	printf("\thostname = %s\n", url->hostname);
 	printf("\thas_ipaddress = %d\n", url->has_ipaddress);
 	if (url->has_port) {
@@ -166,51 +164,50 @@ int url_parse(const char *url, struct url_opts_s **result)
 		return -1;
 	}
 
-        /* Clone the string into a tmp buffer as strsep will want to modify it */
-        char tmp[256];
-        memset(tmp, 0, sizeof(tmp));
-        strncpy(tmp, url, sizeof(tmp) - 1);
+	/* Clone the string into a tmp buffer as strsep will want to modify it */
+	char tmp[256];
+	memset(tmp, 0, sizeof(tmp));
+	strncpy(tmp, url, sizeof(tmp) - 1);
 
-        char *str = &tmp[0];
-        char *p = strsep(&str, ":");
-        if (!p || !str) {
+	char *str = &tmp[0];
+	char *p = strsep(&str, ":");
+	if (!p || !str) {
 		free(opts);
-                return -1;
+		return -1;
 	}
 
-        strncpy(opts->protocol, p, sizeof(opts->protocol) - 1);
+	strncpy(opts->protocol, p, sizeof(opts->protocol) - 1);
 	if (strcasecmp(opts->protocol, "udp") == 0)
 		opts->protocol_type = P_UDP;
-	else
-	if (strcasecmp(opts->protocol, "rtp") == 0)
+	else if (strcasecmp(opts->protocol, "rtp") == 0)
 		opts->protocol_type = P_RTP;
 
-        /* Skip the "//" after the : */
-        if ((*(str + 0) == '/') && *(str + 1) == '/')
-            str += 2;
+	/* Skip the "//" after the : */
+	if ((*(str + 0) == '/') && *(str + 1) == '/')
+		str += 2;
 
-        /* ip address */
-        p = strsep(&str, ":");
-        if (!p) {
+	/* ip address */
+	p = strsep(&str, ":");
+	if (!p) {
 		/* No hostname */
 		free(opts);
-                return -2;
+		return -2;
 	}
 
 	if (regex_match(p, "^\[0-9].*.$") == 0)
 		opts->has_ipaddress = 1;
 
-        strncpy(opts->hostname, p, sizeof(opts->hostname) - 1);
+	strncpy(opts->hostname, p, sizeof(opts->hostname) - 1);
 
-        /* ip port */
-        p = strsep(&str, ":");
-        if (!p) {
+	/* ip port */
+	p = strsep(&str, ":");
+	if (!p) {
 		/* No port */
 		free(opts);
-                return -2;
+		return -2;
 	}
 
-        opts->port = atoi(p);
+	opts->port = atoi(p);
 	if (opts->port <= 65535)
 		opts->has_port = 1;
 
@@ -221,7 +218,6 @@ int url_parse(const char *url, struct url_opts_s **result)
 
 	char *q = strsep(&str2, "?&");
 	while (q && has_args) {
-
 		q = strsep(&str2, "?&");
 		if (!q)
 			break;
@@ -230,7 +226,7 @@ int url_parse(const char *url, struct url_opts_s **result)
 		if (url_argsplit(q, &tag, &value) < 0) {
 			printf("split error\n");
 		}
-                //printf("tag = [%s] = [%s]\n", tag, value);
+		//printf("tag = [%s] = [%s]\n", tag, value);
 		if (tag) {
 			if (strcasecmp(tag, "ifname") == 0)
 				strncpy(opts->ifname, value, sizeof(opts->ifname) - 1);
@@ -240,7 +236,7 @@ int url_parse(const char *url, struct url_opts_s **result)
 				opts->buffersize = atoi(value);
 			else
 #endif
-			if (strcasecmp(tag, "fifosize") == 0)
+			    if (strcasecmp(tag, "fifosize") == 0)
 				opts->fifosize = atoi(value);
 			else {
 				fprintf(stderr, "Unknown tag [%s], aborting.\n", tag);
@@ -263,11 +259,10 @@ int url_parse(const char *url, struct url_opts_s **result)
 err:
 	*result = 0;
 	free(opts);
-        return ret;
+	return ret;
 }
 
 void url_free(struct url_opts_s *arg)
 {
-        free(arg);
+	free(arg);
 }
-

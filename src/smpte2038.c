@@ -55,7 +55,8 @@ void klvanc_smpte2038_anc_data_packet_free(struct klvanc_smpte2038_anc_data_pack
 }
 
 #define SHOW_LINE_U32(indent, fn) printf("%s%s = %d (0x%x)\n", indent, #fn, fn, fn);
-#define SHOW_LINE_U64(indent, fn) printf("%s%s = %" PRIu64 " (0x%" PRIx64 ")\n", indent, #fn, fn, fn);
+#define SHOW_LINE_U64(indent, fn)                                                        \
+	printf("%s%s = %" PRIu64 " (0x%" PRIx64 ")\n", indent, #fn, fn, fn);
 
 void klvanc_smpte2038_anc_data_packet_dump(struct klvanc_smpte2038_anc_data_packet_s *h)
 {
@@ -98,16 +99,22 @@ void klvanc_smpte2038_anc_data_packet_dump(struct klvanc_smpte2038_anc_data_pack
 	}
 }
 
-#define VALIDATE(obj, val) if ((obj) != (val)) { printf("%s is invalid\n", #obj); goto err; }
+#define VALIDATE(obj, val)                                                               \
+	if ((obj) != (val)) {                                                            \
+		printf("%s is invalid\n", #obj);                                         \
+		goto err;                                                                \
+	}
 
-static int smpte2038_parse_pes_payload_int(struct klbs_context_s *bs, struct klvanc_smpte2038_anc_data_packet_s *h)
+static int smpte2038_parse_pes_payload_int(
+    struct klbs_context_s *bs, struct klvanc_smpte2038_anc_data_packet_s *h)
 {
 	int rem = klbs_get_buffer_size(bs) - klbs_get_byte_count(bs);
 	int udwByteCount;
 	int byteAligned = 0;
 
 	while (rem > 4) {
-		h->lines = realloc(h->lines, (h->lineCount + 1) * sizeof(struct klvanc_smpte2038_anc_data_line_s));
+		h->lines = realloc(h->lines,
+		    (h->lineCount + 1) * sizeof(struct klvanc_smpte2038_anc_data_line_s));
 
 		struct klvanc_smpte2038_anc_data_line_s *l = h->lines + h->lineCount;
 		memset(l, 0, sizeof(*l));
@@ -184,7 +191,8 @@ err:
 	return -1;
 }
 
-int klvanc_smpte2038_parse_pes_payload(uint8_t *payload, unsigned int byteCount, struct klvanc_smpte2038_anc_data_packet_s **result)
+int klvanc_smpte2038_parse_pes_payload(uint8_t *payload, unsigned int byteCount,
+    struct klvanc_smpte2038_anc_data_packet_s **result)
 {
 	int ret;
 	struct klbs_context_s *bs = klbs_alloc();
@@ -197,7 +205,7 @@ int klvanc_smpte2038_parse_pes_payload(uint8_t *payload, unsigned int byteCount,
 		return -1;
 	}
 
-        klbs_read_set_buffer(bs, payload, byteCount);
+	klbs_read_set_buffer(bs, payload, byteCount);
 
 	ret = smpte2038_parse_pes_payload_int(bs, h);
 
@@ -209,7 +217,8 @@ int klvanc_smpte2038_parse_pes_payload(uint8_t *payload, unsigned int byteCount,
 	return ret;
 }
 
-int klvanc_smpte2038_parse_pes_packet(uint8_t *section, unsigned int byteCount, struct klvanc_smpte2038_anc_data_packet_s **result)
+int klvanc_smpte2038_parse_pes_packet(uint8_t *section, unsigned int byteCount,
+    struct klvanc_smpte2038_anc_data_packet_s **result)
 {
 	int ret = -1;
 	struct klbs_context_s *bs = klbs_alloc();
@@ -222,7 +231,7 @@ int klvanc_smpte2038_parse_pes_packet(uint8_t *section, unsigned int byteCount, 
 		return -1;
 	}
 
-        klbs_read_set_buffer(bs, section, byteCount);
+	klbs_read_set_buffer(bs, section, byteCount);
 
 	h->packet_start_code_prefix = klbs_read_bits(bs, 24);
 	VALIDATE(h->packet_start_code_prefix, 1);
@@ -260,13 +269,13 @@ int klvanc_smpte2038_parse_pes_packet(uint8_t *section, unsigned int byteCount, 
 	VALIDATE(h->PES_header_data_length, 5);
 
 	/* PTS Handling */
-	uint64_t a = (uint64_t)klbs_read_bits(bs, 3) << 30;
+	uint64_t a = (uint64_t) klbs_read_bits(bs, 3) << 30;
 	klbs_read_bits(bs, 1);
 
-	uint64_t b = (uint64_t)klbs_read_bits(bs, 15) << 15;
+	uint64_t b = (uint64_t) klbs_read_bits(bs, 15) << 15;
 	klbs_read_bits(bs, 1);
 
-	uint64_t c = (uint64_t)klbs_read_bits(bs, 15);
+	uint64_t c = (uint64_t) klbs_read_bits(bs, 15);
 	klbs_read_bits(bs, 1);
 
 	h->PTS = a | b | c;
@@ -310,18 +319,22 @@ int klvanc_smpte2038_packetizer_alloc(struct klvanc_smpte2038_packetizer_s **ctx
 	return 0;
 }
 
-static __inline void klvanc_smpte2038_buffer_recalc(struct klvanc_smpte2038_packetizer_s *ctx)
+static __inline void klvanc_smpte2038_buffer_recalc(
+    struct klvanc_smpte2038_packetizer_s *ctx)
 {
 	ctx->buffree = ctx->buflen - ctx->bufused;
 }
 
-static void klvanc_smpte2038_buffer_adjust(struct klvanc_smpte2038_packetizer_s *ctx, uint32_t newsizeBytes)
+static void klvanc_smpte2038_buffer_adjust(
+    struct klvanc_smpte2038_packetizer_s *ctx, uint32_t newsizeBytes)
 {
 #if KLVANC_SMPTE2038_PACKETIZER_DEBUG
 	printf("%s(%d)\n", __func__, newsizeBytes);
 #endif
 	if (newsizeBytes > (128 * 1024)) {
-		fprintf(stderr, "%s() buffer exceeds impossible limit, with %d additional bytes\n", __func__, newsizeBytes);
+		fprintf(stderr,
+		    "%s() buffer exceeds impossible limit, with %d additional bytes\n",
+		    __func__, newsizeBytes);
 		abort();
 	}
 	ctx->buf = realloc(ctx->buf, newsizeBytes);
@@ -365,7 +378,8 @@ static uint16_t add_parity(uint16_t val)
 		return val | (__builtin_parity(val) ? 0x100 : 0x200);
 }
 
-int klvanc_smpte2038_packetizer_append(struct klvanc_smpte2038_packetizer_s *ctx, struct klvanc_packet_header_s *pkt)
+int klvanc_smpte2038_packetizer_append(
+    struct klvanc_smpte2038_packetizer_s *ctx, struct klvanc_packet_header_s *pkt)
 {
 #if KLVANC_SMPTE2038_PACKETIZER_DEBUG
 	printf("%s()\n", __func__);
@@ -378,18 +392,20 @@ int klvanc_smpte2038_packetizer_append(struct klvanc_smpte2038_packetizer_s *ctx
 
 	/* Prepare a new 2038 line and add it to the existing buffer */
 
-        klbs_write_set_buffer(ctx->bs, ctx->buf + ctx->bufused, ctx->buffree);
-        klbs_write_bits(ctx->bs, 0, 6);				/* '000000' */
-        klbs_write_bits(ctx->bs, 0, 1);				/* c_not_y_channel_flag */
-        klbs_write_bits(ctx->bs, pkt->lineNr, 11);		/* line_number */
-        klbs_write_bits(ctx->bs, offset, 12);			/* horizontal_offset */
-        klbs_write_bits(ctx->bs, add_parity(pkt->did), 10);	/* DID */
-        klbs_write_bits(ctx->bs, add_parity(pkt->dbnsdid), 10);	/* SDID */
-        klbs_write_bits(ctx->bs, add_parity(pkt->payloadLengthWords), 10); /* data_count */
+	klbs_write_set_buffer(ctx->bs, ctx->buf + ctx->bufused, ctx->buffree);
+	klbs_write_bits(ctx->bs, 0, 6); /* '000000' */
+	klbs_write_bits(ctx->bs, 0, 1); /* c_not_y_channel_flag */
+	klbs_write_bits(ctx->bs, pkt->lineNr, 11); /* line_number */
+	klbs_write_bits(ctx->bs, offset, 12); /* horizontal_offset */
+	klbs_write_bits(ctx->bs, add_parity(pkt->did), 10); /* DID */
+	klbs_write_bits(ctx->bs, add_parity(pkt->dbnsdid), 10); /* SDID */
+	klbs_write_bits(
+	    ctx->bs, add_parity(pkt->payloadLengthWords), 10); /* data_count */
 	for (int i = 0; i < pkt->payloadLengthWords; i++)
-        	klbs_write_bits(ctx->bs, pkt->payload[i], 10);	/* user_data_word */
-       	klbs_write_bits(ctx->bs, pkt->checksum, 10);		/* checksum_word */
-	klbs_write_byte_stuff(ctx->bs, 1);			/* Stuffing byte if required to end on byte alignment. */
+		klbs_write_bits(ctx->bs, pkt->payload[i], 10); /* user_data_word */
+	klbs_write_bits(ctx->bs, pkt->checksum, 10); /* checksum_word */
+	klbs_write_byte_stuff(
+	    ctx->bs, 1); /* Stuffing byte if required to end on byte alignment. */
 
 #if 0
 	/* add stuffing_byte so the stream is easier to eyeball debug. */
@@ -410,7 +426,8 @@ int klvanc_smpte2038_packetizer_append(struct klvanc_smpte2038_packetizer_s *ctx
 }
 
 /* return the size in bytes of the newly created buffer */
-int klvanc_smpte2038_packetizer_end(struct klvanc_smpte2038_packetizer_s *ctx, uint64_t pts)
+int klvanc_smpte2038_packetizer_end(
+    struct klvanc_smpte2038_packetizer_s *ctx, uint64_t pts)
 {
 	if (ctx->bufused == KLVANC_SMPTE2038_PACKETIZER_BUFFER_RESET_OFFSET)
 		return -1;
@@ -426,31 +443,31 @@ int klvanc_smpte2038_packetizer_end(struct klvanc_smpte2038_packetizer_s *ctx, u
 	klbs_write_set_buffer(ctx->bs, ctx->buf, 15);
 
 	/* PES Header - Bug: bitstream can't write 32bit values */
-	klbs_write_bits(ctx->bs, 1, 24);		/* packet_start_code_prefix */
-	klbs_write_bits(ctx->bs, 0xBD, 8);		/* stream_id */
-	klbs_write_bits(ctx->bs, 0, 16);		/* PES_packet_length */
-	klbs_write_bits(ctx->bs, 2, 2);		/* '10' fixed value */
-	klbs_write_bits(ctx->bs, 0, 2);		/* PES_scrambling_control (not scrambled) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* PES_priority */
-	klbs_write_bits(ctx->bs, 1, 1);		/* data_alignment_indicator (aligned) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* copyright (not-copyright) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* original-or-copy (copy) */
-	klbs_write_bits(ctx->bs, 2, 2);		/* PTS_DTS_flags (PTS Present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* ESCR_flag (not present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* ES_RATE_flag (not present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* DSM_TRICK_MODE_flag (not present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* additional_copy_info_flag (not present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* PES_CRC_flag (not present) */
-	klbs_write_bits(ctx->bs, 0, 1);		/* PES_EXTENSION_flag (not present) */
-	klbs_write_bits(ctx->bs, 5, 8);		/* PES_HEADER_DATA_length */
-	klbs_write_bits(ctx->bs, 2, 4);		/* '0010' fixed value */
+	klbs_write_bits(ctx->bs, 1, 24); /* packet_start_code_prefix */
+	klbs_write_bits(ctx->bs, 0xBD, 8); /* stream_id */
+	klbs_write_bits(ctx->bs, 0, 16); /* PES_packet_length */
+	klbs_write_bits(ctx->bs, 2, 2); /* '10' fixed value */
+	klbs_write_bits(ctx->bs, 0, 2); /* PES_scrambling_control (not scrambled) */
+	klbs_write_bits(ctx->bs, 0, 1); /* PES_priority */
+	klbs_write_bits(ctx->bs, 1, 1); /* data_alignment_indicator (aligned) */
+	klbs_write_bits(ctx->bs, 0, 1); /* copyright (not-copyright) */
+	klbs_write_bits(ctx->bs, 0, 1); /* original-or-copy (copy) */
+	klbs_write_bits(ctx->bs, 2, 2); /* PTS_DTS_flags (PTS Present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* ESCR_flag (not present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* ES_RATE_flag (not present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* DSM_TRICK_MODE_flag (not present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* additional_copy_info_flag (not present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* PES_CRC_flag (not present) */
+	klbs_write_bits(ctx->bs, 0, 1); /* PES_EXTENSION_flag (not present) */
+	klbs_write_bits(ctx->bs, 5, 8); /* PES_HEADER_DATA_length */
+	klbs_write_bits(ctx->bs, 2, 4); /* '0010' fixed value */
 
-	klbs_write_bits(ctx->bs, (pts >> 30), 3);			/* PTS[32:30] */
-	klbs_write_bits(ctx->bs, 1, 1);				/* marker_bit */
-	klbs_write_bits(ctx->bs, (pts >> 15) & 0x7fff, 15);	/* PTS[29:15] */
-	klbs_write_bits(ctx->bs, 1, 1);				/* marker_bit */
-	klbs_write_bits(ctx->bs, (pts & 0x7fff), 15);		/* PTS[14:0] */
-	klbs_write_bits(ctx->bs, 1, 1);				/* marker_bit */
+	klbs_write_bits(ctx->bs, (pts >> 30), 3); /* PTS[32:30] */
+	klbs_write_bits(ctx->bs, 1, 1); /* marker_bit */
+	klbs_write_bits(ctx->bs, (pts >> 15) & 0x7fff, 15); /* PTS[29:15] */
+	klbs_write_bits(ctx->bs, 1, 1); /* marker_bit */
+	klbs_write_bits(ctx->bs, (pts & 0x7fff), 15); /* PTS[14:0] */
+	klbs_write_bits(ctx->bs, 1, 1); /* marker_bit */
 
 	/* Close (actually its 'align') the bitstream buffer */
 	klbs_write_buffer_complete(ctx->bs);
@@ -468,7 +485,8 @@ int klvanc_smpte2038_packetizer_end(struct klvanc_smpte2038_packetizer_s *ctx, u
 	return 0;
 }
 
-int klvanc_smpte2038_convert_line_to_words(struct klvanc_smpte2038_anc_data_line_s *l, uint16_t **words, uint16_t *wordCount)
+int klvanc_smpte2038_convert_line_to_words(
+    struct klvanc_smpte2038_anc_data_line_s *l, uint16_t **words, uint16_t *wordCount)
 {
 	if (!l || !words || !wordCount)
 		return -1;
@@ -500,4 +518,3 @@ int klvanc_smpte2038_convert_line_to_words(struct klvanc_smpte2038_anc_data_line
 	*wordCount = i;
 	return 0;
 }
-

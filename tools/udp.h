@@ -36,9 +36,9 @@
 extern "C" {
 #endif
 
-typedef void (*tsudp_receiver_callback)(void *userContext, unsigned char *buf, int byteCount);
-struct iso13818_udp_receiver_s
-{
+typedef void (*tsudp_receiver_callback)(
+    void *userContext, unsigned char *buf, int byteCount);
+struct iso13818_udp_receiver_s {
 	int skt;
 
 	struct sockaddr_in sin;
@@ -63,19 +63,16 @@ struct iso13818_udp_receiver_s
 };
 
 int iso13818_udp_receiver_alloc(struct iso13818_udp_receiver_s **p,
-        unsigned int socket_buffer_size,
-        const char *ip_addr,
-        unsigned short ip_port,
-        tsudp_receiver_callback cb,
-        void *userContext,
-	int stripRTPHeader);
+    unsigned int socket_buffer_size, const char *ip_addr, unsigned short ip_port,
+    tsudp_receiver_callback cb, void *userContext, int stripRTPHeader);
 void iso13818_udp_receiver_free(struct iso13818_udp_receiver_s **p);
-ssize_t iso13818_udp_receiver_read(struct iso13818_udp_receiver_s *ctx, unsigned char *buf, unsigned int byteCount);
+ssize_t iso13818_udp_receiver_read(
+    struct iso13818_udp_receiver_s *ctx, unsigned char *buf, unsigned int byteCount);
 int iso13818_udp_receiver_thread_start(struct iso13818_udp_receiver_s *ctx);
 
 /* Add or remove a specific network interface from the receiver, if its a multicast address */
-int  iso13818_udp_receiver_join_multicast(struct iso13818_udp_receiver_s *p, char *ifname);
-int  iso13818_udp_receiver_drop_multicast(struct iso13818_udp_receiver_s *p, char *ifname);
+int iso13818_udp_receiver_join_multicast(struct iso13818_udp_receiver_s *p, char *ifname);
+int iso13818_udp_receiver_drop_multicast(struct iso13818_udp_receiver_s *p, char *ifname);
 
 #ifdef __cplusplus
 };

@@ -32,24 +32,19 @@ int klvanc_dump_EIA_608(struct klvanc_context_s *ctx, void *p)
 	struct klvanc_packet_eia_608_s *pkt = p;
 
 	if (ctx->verbose)
-		PRINT_DEBUG("%s() %p\n", __func__, (void *)pkt);
+		PRINT_DEBUG("%s() %p\n", __func__, (void *) pkt);
 
-	PRINT_DEBUG("%s() EIA608: %02x %02x %02x : field %d line_offset %d cc_data_1 %02x cc_data_2 %02x\n",
-		    __func__,
-		    pkt->payload[0],
-		    pkt->payload[1],
-		    pkt->payload[2],
-		    pkt->field,
-		    pkt->line_offset,
-		    pkt->cc_data_1,
-		    pkt->cc_data_2);
+	PRINT_DEBUG("%s() EIA608: %02x %02x %02x : field %d line_offset %d cc_data_1 "
+	            "%02x cc_data_2 %02x\n",
+	    __func__, pkt->payload[0], pkt->payload[1], pkt->payload[2], pkt->field,
+	    pkt->line_offset, pkt->cc_data_1, pkt->cc_data_2);
 
 	return KLAPI_OK;
 }
 
-int parse_EIA_608(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
+int parse_EIA_608(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
-
 	if (ctx->callbacks == NULL || ctx->callbacks->eia_608 == NULL)
 		return KLAPI_OK;
 
@@ -62,12 +57,12 @@ int parse_EIA_608(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *h
 
 	memcpy(&pkt->hdr, hdr, sizeof(*hdr));
 
-        /* Parsed */
+	/* Parsed */
 	pkt->payload[0] = hdr->payload[0];
 	pkt->payload[1] = hdr->payload[1];
 	pkt->payload[2] = hdr->payload[2];
 
-        /* See SMPTE ST 334-1:2015 Annex B */
+	/* See SMPTE ST 334-1:2015 Annex B */
 	if (pkt->payload[0] & 0x80)
 		pkt->field = 0;
 	else
@@ -97,7 +92,8 @@ void klvanc_destroy_EIA_608(struct klvanc_packet_eia_608_s *pkt)
 	free(pkt);
 }
 
-int klvanc_convert_EIA_608_to_packetBytes(struct klvanc_packet_eia_608_s *pkt, uint8_t **bytes, uint16_t *byteCount)
+int klvanc_convert_EIA_608_to_packetBytes(
+    struct klvanc_packet_eia_608_s *pkt, uint8_t **bytes, uint16_t *byteCount)
 {
 	if (!pkt || !bytes) {
 		return -1;
@@ -137,7 +133,8 @@ int klvanc_convert_EIA_608_to_packetBytes(struct klvanc_packet_eia_608_s *pkt, u
 	return 0;
 }
 
-int klvanc_convert_EIA_608_to_words(struct klvanc_packet_eia_608_s *pkt, uint16_t **words, uint16_t *wordCount)
+int klvanc_convert_EIA_608_to_words(
+    struct klvanc_packet_eia_608_s *pkt, uint16_t **words, uint16_t *wordCount)
 {
 	uint8_t *buf;
 	uint16_t byteCount;

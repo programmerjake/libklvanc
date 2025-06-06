@@ -40,7 +40,7 @@ int klvanc_context_dump(struct klvanc_context_s *ctx)
 {
 	VALIDATE(ctx);
 
-	printf("ctx %p\n", (void *)ctx);
+	printf("ctx %p\n", (void *) ctx);
 
 	return KLAPI_OK;
 }
@@ -82,10 +82,10 @@ int klvanc_context_destroy(struct klvanc_context_s *ctx)
 int klvanc_context_enable_cache(struct klvanc_context_s *ctx)
 {
 	if (klvanc_cache_alloc(ctx) < 0) {
-		fprintf(stderr, "Unable to allocate vanc cache, enough free ram? Will continue.\n");
+		fprintf(stderr,
+		    "Unable to allocate vanc cache, enough free ram? Will continue.\n");
 		return -1;
 	}
 
 	return 0;
 }
-

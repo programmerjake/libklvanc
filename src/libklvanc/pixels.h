@@ -43,7 +43,8 @@ extern "C" {
  * @param[in]	uint16_t * v - Brief description goes here.
  * @param[in]	int width - Brief description goes here.
  */
-void klvanc_v210_planar_unpack_c(const uint32_t * src, uint16_t * y, uint16_t * u, uint16_t * v, int width);
+void klvanc_v210_planar_unpack_c(
+    const uint32_t *src, uint16_t *y, uint16_t *u, uint16_t *v, int width);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -54,7 +55,8 @@ void klvanc_v210_planar_unpack_c(const uint32_t * src, uint16_t * y, uint16_t * 
  * @result 	0 - Success
  * @result 	< 0 - Error
  */
-int klvanc_v210_line_to_nv20_c(const uint32_t * src, uint16_t * dst, int dstSizeBytes, int width);
+int klvanc_v210_line_to_nv20_c(
+    const uint32_t *src, uint16_t *dst, int dstSizeBytes, int width);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -62,7 +64,7 @@ int klvanc_v210_line_to_nv20_c(const uint32_t * src, uint16_t * dst, int dstSize
  * @param[in]	uint8_t * dst - Brief description goes here.
  * @param[in]	int lines - Brief description goes here.
  */
-void klvanc_v210_downscale_line_c(uint16_t * src, uint8_t * dst, int lines);
+void klvanc_v210_downscale_line_c(uint16_t *src, uint8_t *dst, int lines);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -70,7 +72,7 @@ void klvanc_v210_downscale_line_c(uint16_t * src, uint8_t * dst, int lines);
  * @param[in]	uint16_t * dst - Brief description goes here.
  * @param[in]	int width - Brief description goes here.
  */
-void klvanc_v210_line_to_uyvy_c(const uint32_t * src, uint16_t * dst, int width);
+void klvanc_v210_line_to_uyvy_c(const uint32_t *src, uint16_t *dst, int width);
 
 /**
  * @brief	Convert Y10 buffer to V210

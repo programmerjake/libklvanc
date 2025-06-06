@@ -27,21 +27,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int isValidHeader(struct klvanc_context_s *ctx, const unsigned short *arr, unsigned int len)
+static int isValidHeader(
+    struct klvanc_context_s *ctx, const unsigned short *arr, unsigned int len)
 {
 	int ret = 0;
 	if (len > 7) {
-		if ((*(arr + 0) < 3) && ((*(arr + 1) & 0x3fc) == 0x3fc) && ((*(arr + 2) & 0x3fc) == 0x3fc))
+		if ((*(arr + 0) < 3) && ((*(arr + 1) & 0x3fc) == 0x3fc) &&
+		    ((*(arr + 2) & 0x3fc) == 0x3fc))
 			ret = 1;
 	}
 
 	if (ctx->verbose > 2)
-		PRINT_DEBUG("%04x %04x %04x %s\n", *(arr + 0), *(arr + 1), *(arr + 2), ret ? "valid": "invalid");
+		PRINT_DEBUG("%04x %04x %04x %s\n", *(arr + 0), *(arr + 1), *(arr + 2),
+		    ret ? "valid" : "invalid");
 	return ret;
 }
 
-static struct type_s
-{
+static struct type_s {
 	unsigned short did, sdid;
 	enum klvanc_packet_type_e type;
 	int (*parse)(struct klvanc_context_s *, struct klvanc_packet_header_s *, void **);
@@ -74,8 +76,7 @@ const char *klvanc_lookupDescriptionByType(enum klvanc_packet_type_e type)
 {
 	for (int i = 0; i < (sizeof(types) / sizeof(struct type_s)); i++) {
 		if (types[i].type == type)
-			return klvanc_didLookupDescription(types[i].did,
-							   types[i].sdid);
+			return klvanc_didLookupDescription(types[i].did, types[i].sdid);
 	}
 
 	return "UNDEFINED";
@@ -85,14 +86,14 @@ const char *klvanc_lookupSpecificationByType(enum klvanc_packet_type_e type)
 {
 	for (int i = 0; i < (sizeof(types) / sizeof(struct type_s)); i++) {
 		if (types[i].type == type)
-			return klvanc_didLookupSpecification(types[i].did,
-							     types[i].sdid);
+			return klvanc_didLookupSpecification(types[i].did, types[i].sdid);
 	}
 
 	return "UNDEFINED";
 }
 
-static int freeByType(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void *pp)
+static int freeByType(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void *pp)
 {
 	for (int i = 0; i < (sizeof(types) / sizeof(struct type_s)); i++) {
 		if ((types[i].type == hdr->type) && (types[i].free)) {
@@ -104,7 +105,8 @@ static int freeByType(struct klvanc_context_s *ctx, struct klvanc_packet_header_
 	return -EINVAL;
 }
 
-static int parseByType(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
+static int parseByType(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
 	*pp = 0;
 	for (int i = 0; i < (sizeof(types) / sizeof(struct type_s)); i++) {
@@ -125,14 +127,15 @@ static int dumpByType(struct klvanc_context_s *ctx, struct klvanc_packet_header_
 	return -EINVAL;
 }
 
-static int parse(struct klvanc_context_s *ctx, const unsigned short *arr, unsigned int len,
-	struct klvanc_packet_header_s **hdr)
+static int parse(struct klvanc_context_s *ctx, const unsigned short *arr,
+    unsigned int len, struct klvanc_packet_header_s **hdr)
 {
 	if (!isValidHeader(ctx, arr, len)) {
 		return -EINVAL;
 	}
 
-	struct klvanc_packet_header_s *p = calloc(1, sizeof(struct klvanc_packet_header_s));
+	struct klvanc_packet_header_s *p =
+	    calloc(1, sizeof(struct klvanc_packet_header_s));
 	if (!p)
 		return -ENOMEM;
 
@@ -160,8 +163,8 @@ static int parse(struct klvanc_context_s *ctx, const unsigned short *arr, unsign
 		p->payload[i] = *(arr + 6 + i);
 	}
 	p->checksum = *(arr + 6 + i);
-	p->checksumValid = klvanc_checksum_is_valid(arr + 3,
-		p->payloadLengthWords + 4 /* payload + header + len + crc */);
+	p->checksumValid = klvanc_checksum_is_valid(
+	    arr + 3, p->payloadLengthWords + 4 /* payload + header + len + crc */);
 	if (!p->checksumValid)
 		ctx->checksum_failures++;
 
@@ -171,19 +174,20 @@ static int parse(struct klvanc_context_s *ctx, const unsigned short *arr, unsign
 	return KLAPI_OK;
 }
 
-void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc,
-			       int maxlen, unsigned int linenr, int onlyvalid)
+void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc, int maxlen,
+    unsigned int linenr, int onlyvalid)
 {
 	if (onlyvalid && (*(vanc + 1) != 0x3ff) && (*(vanc + 2) != 0x3ff))
 		return;
 
-	PRINT_DEBUG("LineNr: %03d ADF: [%03x][%03x][%03x] DID: [%03x] DBN/SDID: [%03x] DC: [%03x]\n",
-		    linenr, *(vanc + 0), *(vanc + 1), *(vanc + 2), *(vanc + 3),
-		    *(vanc + 4), *(vanc + 5));
+	PRINT_DEBUG("LineNr: %03d ADF: [%03x][%03x][%03x] DID: [%03x] DBN/SDID: [%03x] "
+	            "DC: [%03x]\n",
+	    linenr, *(vanc + 0), *(vanc + 1), *(vanc + 2), *(vanc + 3), *(vanc + 4),
+	    *(vanc + 5));
 
 	PRINT_DEBUG("           Desc: %s [SMPTE %s]\n",
-		    klvanc_didLookupDescription(*(vanc + 3) & 0xff, *(vanc + 4) & 0xff),
-		    klvanc_didLookupSpecification(*(vanc + 3) & 0xff, *(vanc + 4) & 0xff));
+	    klvanc_didLookupDescription(*(vanc + 3) & 0xff, *(vanc + 4) & 0xff),
+	    klvanc_didLookupSpecification(*(vanc + 3) & 0xff, *(vanc + 4) & 0xff));
 
 	/* Spec says DC is a maximum number of 255 words */
 	int i, words = *(vanc + 5) & 0xff;
@@ -194,18 +198,18 @@ void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc,
 	PRINT_DEBUG("\n             CS: [%03x]\n", *(vanc + i));
 }
 
-void klvanc_dump_packet_console(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr)
+void klvanc_dump_packet_console(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr)
 {
 	PRINT_DEBUG("hdr->type   = %d\n", hdr->type);
-	PRINT_DEBUG(" ->adf      = 0x%04x/0x%04x/0x%04x\n", hdr->adf[0], hdr->adf[1], hdr->adf[2]);
-	PRINT_DEBUG(" ->did/sdid = 0x%02x / 0x%02x [%s %s] via SDI line %d\n",
-		    hdr->did,
-		    hdr->dbnsdid,
-		    klvanc_didLookupSpecification(hdr->did, hdr->dbnsdid),
-		    klvanc_didLookupDescription(hdr->did, hdr->dbnsdid),
-		    hdr->lineNr);
+	PRINT_DEBUG(" ->adf      = 0x%04x/0x%04x/0x%04x\n", hdr->adf[0], hdr->adf[1],
+	    hdr->adf[2]);
+	PRINT_DEBUG(" ->did/sdid = 0x%02x / 0x%02x [%s %s] via SDI line %d\n", hdr->did,
+	    hdr->dbnsdid, klvanc_didLookupSpecification(hdr->did, hdr->dbnsdid),
+	    klvanc_didLookupDescription(hdr->did, hdr->dbnsdid), hdr->lineNr);
 	PRINT_DEBUG(" ->h_offset = %d\n", hdr->horizontalOffset);
-	PRINT_DEBUG(" ->checksum = 0x%04x (%s)\n", hdr->checksum, hdr->checksumValid ? "VALID" : "INVALID");
+	PRINT_DEBUG(" ->checksum = 0x%04x (%s)\n", hdr->checksum,
+	    hdr->checksumValid ? "VALID" : "INVALID");
 	PRINT_DEBUG(" ->payloadLengthWords = %d\n", hdr->payloadLengthWords);
 	PRINT_DEBUG(" ->payload  = ");
 	for (int i = 0; i < hdr->payloadLengthWords; i++)
@@ -213,7 +217,8 @@ void klvanc_dump_packet_console(struct klvanc_context_s *ctx, struct klvanc_pack
 	PRINT_DEBUG("\n");
 }
 
-int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const unsigned short *arr, unsigned int len)
+int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr,
+    const unsigned short *arr, unsigned int len)
 {
 	int attempts = 0;
 	VALIDATE(ctx);
@@ -222,7 +227,8 @@ int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const
 
 	if (len > LIBKLVANC_PACKET_MAX_PAYLOAD) {
 		/* Safety */
-		PRINT_ERR("%s() length %d exceeds %d, ignoring.\n", __func__, len, LIBKLVANC_PACKET_MAX_PAYLOAD);
+		PRINT_ERR("%s() length %d exceeds %d, ignoring.\n", __func__, len,
+		    LIBKLVANC_PACKET_MAX_PAYLOAD);
 		return -EINVAL;
 	}
 
@@ -261,12 +267,15 @@ int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const
 				if (ctx->verbose == 2 && decodedPacket) {
 					ret = dumpByType(ctx, decodedPacket);
 					if (ret < 0) {
-						PRINT_ERR("Failed to dump by type, missing dumper function?\n");
+						PRINT_ERR("Failed to dump by type, "
+						          "missing dumper function?\n");
 					}
 				}
 			} else {
 				if (ctx->warn_on_decode_failure) {
-					if (klrestricted_code_path_block_execute(&ctx->rcp_failedToDecode)) {
+					if (klrestricted_code_path_block_execute(
+						&ctx->rcp_failedToDecode))
+					{
 						PRINT_ERR("Failed parsing by type\n");
 						klvanc_dump_packet_console(ctx, hdr);
 					}
@@ -288,12 +297,11 @@ int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const
 	return attempts;
 }
 
-int klvanc_sdi_create_payload(uint8_t sdid, uint8_t did,
-        const uint8_t *src, uint16_t srcByteCount,
-        uint16_t **dst, uint16_t *dstWordCount,
-        uint32_t bitDepth)
+int klvanc_sdi_create_payload(uint8_t sdid, uint8_t did, const uint8_t *src,
+    uint16_t srcByteCount, uint16_t **dst, uint16_t *dstWordCount, uint32_t bitDepth)
 {
-	if ((bitDepth != 10) || (!sdid) || (!did) || (!src) || (!srcByteCount) || (!dst) || (!dstWordCount))
+	if ((bitDepth != 10) || (!sdid) || (!did) || (!src) || (!srcByteCount) ||
+	    (!dst) || (!dstWordCount))
 		return -1;
 
 	int header_length = 6 + 1; /* Header 6 and checksum footer 1 */
@@ -336,7 +344,8 @@ int klvanc_sdi_create_payload(uint8_t sdid, uint8_t did,
 	return 0;
 }
 
-int klvanc_packet_copy(struct klvanc_packet_header_s **dst, struct klvanc_packet_header_s *src)
+int klvanc_packet_copy(
+    struct klvanc_packet_header_s **dst, struct klvanc_packet_header_s *src)
 {
 	*dst = malloc(sizeof(*src));
 	if (*dst == NULL)
@@ -351,8 +360,8 @@ void klvanc_packet_free(struct klvanc_packet_header_s *src)
 	free(src);
 }
 
-int klvanc_packet_save(const char *dir, const struct klvanc_packet_header_s *pkt,
-                       int lineNr, int did)
+int klvanc_packet_save(
+    const char *dir, const struct klvanc_packet_header_s *pkt, int lineNr, int did)
 {
 	if ((dir == NULL) || (pkt == NULL))
 		return -1;
@@ -367,17 +376,12 @@ int klvanc_packet_save(const char *dir, const struct klvanc_packet_header_s *pkt
 	char *n = strdup(c);
 	for (int i = 0; i < strlen(n); i++)
 		if (n[i] == '/')
-			n[i] = '-'; 
-	
+			n[i] = '-';
+
 	static int idx = 0;
 	char *fn = malloc(strlen(dir) + 128);
 	sprintf(fn, "%s/klvanc-packet-%08d--line-%04d--did-%02x--sdid-%02x--name-%s.bin",
-		dir,
-		idx++,
-		pkt->lineNr,
-		pkt->did,
-		pkt->dbnsdid,
-		n);
+	    dir, idx++, pkt->lineNr, pkt->did, pkt->dbnsdid, n);
 
 	FILE *fh = fopen(fn, "wb");
 	if (fh) {
@@ -386,7 +390,9 @@ int klvanc_packet_save(const char *dir, const struct klvanc_packet_header_s *pkt
 		 *       writing rawPayloadLength is always (think good or bad long vanc messages)
 		 *       the correct thing to do. This will suffice for the time being.
 		 */
-		fwrite(pkt->raw, 2, pkt->payloadLengthWords + 6 /* header */ + 4 /* trailing padding */, fh);
+		fwrite(pkt->raw, 2,
+		    pkt->payloadLengthWords + 6 /* header */ + 4 /* trailing padding */,
+		    fh);
 		fclose(fh);
 	} else {
 		fprintf(stderr, "Unable to create %s\n", fn);
@@ -395,9 +401,12 @@ int klvanc_packet_save(const char *dir, const struct klvanc_packet_header_s *pkt
 	return 0; /* Success */
 }
 
-int klvanc_packet_payload_append(struct klvanc_packet_header_s *dst, struct klvanc_packet_header_s *src, int srcOffset)
+int klvanc_packet_payload_append(
+    struct klvanc_packet_header_s *dst, struct klvanc_packet_header_s *src, int srcOffset)
 {
-	if (dst->payloadLengthWords + (src->payloadLengthWords - srcOffset) > LIBKLVANC_PACKET_MAX_PAYLOAD) {
+	if (dst->payloadLengthWords + (src->payloadLengthWords - srcOffset) >
+	    LIBKLVANC_PACKET_MAX_PAYLOAD)
+	{
 		fprintf(stderr, "%s() Payload Overflow avoided\n", __func__);
 		return -1;
 	}
@@ -407,10 +416,12 @@ int klvanc_packet_payload_append(struct klvanc_packet_header_s *dst, struct klva
 		return -1;
 	}
 
-	memcpy(&dst->payload[dst->payloadLengthWords], &src->payload[srcOffset], (src->payloadLengthWords - srcOffset) * sizeof(uint16_t));
+	memcpy(&dst->payload[dst->payloadLengthWords], &src->payload[srcOffset],
+	    (src->payloadLengthWords - srcOffset) * sizeof(uint16_t));
 	dst->payloadLengthWords += (src->payloadLengthWords - srcOffset);
 
-	memcpy(&dst->raw[dst->rawLengthWords], &src->raw[0], src->rawLengthWords * sizeof(uint16_t));
+	memcpy(&dst->raw[dst->rawLengthWords], &src->raw[0],
+	    src->rawLengthWords * sizeof(uint16_t));
 	dst->rawLengthWords += src->rawLengthWords;
 
 	return 0; /* Success */

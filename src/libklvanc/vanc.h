@@ -102,17 +102,25 @@ struct klvanc_packet_smpte_2108_1_s;
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_callbacks_s
-{
-	int (*afd)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_afd_s *);
-	int (*eia_708b)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_eia_708b_s *);
-	int (*eia_608)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_eia_608_s *);
-	int (*scte_104)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_scte_104_s *);
-	int (*all)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_header_s *);
-	int (*kl_i64le_counter)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_kl_u64le_counter_s *);
-	int (*sdp)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_sdp_s *);
-	int (*smpte_12_2)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_smpte_12_2_s *);
-	int (*smpte_2108_1)(void *user_context, struct klvanc_context_s *, struct klvanc_packet_smpte_2108_1_s *);
+struct klvanc_callbacks_s {
+	int (*afd)(
+	    void *user_context, struct klvanc_context_s *, struct klvanc_packet_afd_s *);
+	int (*eia_708b)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_eia_708b_s *);
+	int (*eia_608)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_eia_608_s *);
+	int (*scte_104)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_scte_104_s *);
+	int (*all)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_header_s *);
+	int (*kl_i64le_counter)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_kl_u64le_counter_s *);
+	int (*sdp)(
+	    void *user_context, struct klvanc_context_s *, struct klvanc_packet_sdp_s *);
+	int (*smpte_12_2)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_smpte_12_2_s *);
+	int (*smpte_2108_1)(void *user_context, struct klvanc_context_s *,
+	    struct klvanc_packet_smpte_2108_1_s *);
 };
 
 struct klvanc_cache_s;
@@ -121,8 +129,7 @@ struct klvanc_cache_s;
  * @brief       Application specific context, the library allocates and stores user specific instance
  *		        information.
  */
-struct klvanc_context_s
-{
+struct klvanc_context_s {
 	int verbose;
 	int allow_bad_checksums; /*!< defaults to false. If true, any frames with bad CRCS are not ignored, they are passed via callback to application. */
 	struct klvanc_callbacks_s *callbacks;
@@ -201,7 +208,8 @@ int klvanc_context_dump(struct klvanc_context_s *ctx);
  * @return      The number of VANC frames found and parsing was attempted.
  * @return      < 0 - Error
  */
-int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const unsigned short *words, unsigned int wordCount);
+int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr,
+    const unsigned short *words, unsigned int wordCount);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -210,7 +218,8 @@ int klvanc_packet_parse(struct klvanc_context_s *ctx, unsigned int lineNr, const
  * @param[in]	unsigned int linenr - SDI line number the array data came from. Used for information / tracking purposes only.
  * @param[in]	int onlyvalid - Brief description goes here.
  */
-void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc, int maxlen, unsigned int linenr, int onlyvalid);
+void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc, int maxlen,
+    unsigned int linenr, int onlyvalid);
 
 #include <libklvanc/vanc-afd.h>
 #include <libklvanc/vanc-eia_708b.h>
@@ -240,10 +249,8 @@ void klvanc_dump_words_console(struct klvanc_context_s *ctx, uint16_t *vanc, int
  * @return      0 - Success
  * @return      < 0 - Error
  */
-int klvanc_sdi_create_payload(uint8_t sdid, uint8_t did,
-	const uint8_t *src, uint16_t srcByteCount,
-	uint16_t **dst, uint16_t *dstWordCount,
-	uint32_t bitDepth);
+int klvanc_sdi_create_payload(uint8_t sdid, uint8_t did, const uint8_t *src,
+    uint16_t srcByteCount, uint16_t **dst, uint16_t *dstWordCount, uint32_t bitDepth);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -266,8 +273,8 @@ const char *klvanc_lookupSpecificationByType(enum klvanc_packet_type_e type);
  * @return      0 - Success
  * @return      < 0 - Error
  */
-int klvanc_packet_copy(struct klvanc_packet_header_s **dst,
-		       struct klvanc_packet_header_s *src);
+int klvanc_packet_copy(
+    struct klvanc_packet_header_s **dst, struct klvanc_packet_header_s *src);
 
 /**
  * @brief	Write the packet to disk, in a debug friendly format that can be
@@ -288,8 +295,8 @@ int klvanc_packet_copy(struct klvanc_packet_header_s **dst,
  * @return      0 - Success
  * @return      < 0 - Error
  */
-int klvanc_packet_save(const char *dir, const struct klvanc_packet_header_s *pkt,
-                       int lineNr, int did);
+int klvanc_packet_save(
+    const char *dir, const struct klvanc_packet_header_s *pkt, int lineNr, int did);
 
 /**
  * @brief	TODO - Brief description goes here.
@@ -301,7 +308,8 @@ void klvanc_packet_free(struct klvanc_packet_header_s *src);
  * @brief Append the payload words from srd to dst. Start copying from srcOffset position.
  * @return 0 on success, else < 0.
  */
-int klvanc_packet_payload_append(struct klvanc_packet_header_s *dst, struct klvanc_packet_header_s *src, int srcOffset);
+int klvanc_packet_payload_append(struct klvanc_packet_header_s *dst,
+    struct klvanc_packet_header_s *src, int srcOffset);
 
 #ifdef __cplusplus
 };

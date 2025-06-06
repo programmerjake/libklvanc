@@ -42,15 +42,33 @@ int main(int argc, char *argv[])
 		char *name;
 		func_ptr func;
 	} apps[] = {
-		{ "klvanc_util",		demo_main, },
-		{ "klvanc_parse",		parse_main, },
-		{ "klvanc_smpte2038",		smpte2038_main, },
-		{ "klvanc_scte104",		scte104_main, },
-		{ "klvanc_eia708",		eia708_main, },
-		{ "klvanc_genscte104",		genscte104_main, },
-		{ "klvanc_gensmpte2038",	gensmpte2038_main, },
-		{ "klvanc_smpte12_2",		smpte12_2_main, },
-		{ "klvanc_afd",			afd_main, },
+		{
+                 "klvanc_util", demo_main,
+		 },
+		{
+                 "klvanc_parse", parse_main,
+		 },
+		{
+                 "klvanc_smpte2038", smpte2038_main,
+		 },
+		{
+                 "klvanc_scte104", scte104_main,
+		 },
+		{
+                 "klvanc_eia708", eia708_main,
+		 },
+		{
+                 "klvanc_genscte104", genscte104_main,
+		 },
+		{
+                 "klvanc_gensmpte2038", gensmpte2038_main,
+		 },
+		{
+                 "klvanc_smpte12_2", smpte12_2_main,
+		 },
+		{
+                 "klvanc_afd", afd_main,
+		 },
 		{ 0, 0 },
 	};
 	char *appname = basename(argv[0]);

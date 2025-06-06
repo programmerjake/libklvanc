@@ -35,7 +35,7 @@
  * @return	Success - User facing printable string.
  * @return	Error - NULL
  */
-const char * klvanc_didLookupDescription(uint16_t did, uint16_t sdid);
+const char *klvanc_didLookupDescription(uint16_t did, uint16_t sdid);
 
 /**
  * @brief	For a given did, sdid, lookup the printable specification name.
@@ -44,4 +44,4 @@ const char * klvanc_didLookupDescription(uint16_t did, uint16_t sdid);
  * @return	Success - User facing printable string.
  * @return	Error - NULL
  */
-const char * klvanc_didLookupSpecification(uint16_t did, uint16_t sdid);
+const char *klvanc_didLookupSpecification(uint16_t did, uint16_t sdid);

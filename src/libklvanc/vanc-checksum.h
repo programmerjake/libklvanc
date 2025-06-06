@@ -41,4 +41,3 @@ uint16_t klvanc_checksum_calculate(const uint16_t *words, int wordCount);
  * @return	< 0 - Error
  */
 int klvanc_checksum_is_valid(const uint16_t *words, int wordCount);
-

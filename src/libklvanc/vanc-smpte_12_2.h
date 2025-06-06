@@ -51,8 +51,7 @@ extern "C" {
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_packet_smpte_12_2_s
-{
+struct klvanc_packet_smpte_12_2_s {
 	struct klvanc_packet_header_s hdr;
 
 	unsigned char payload[256];
@@ -106,10 +105,8 @@ int klvanc_alloc_SMPTE_12_2(struct klvanc_packet_smpte_12_2_s **pkt);
  * @return	0 - Success
  * @return	< 0 - Error
  */
-int klvanc_create_SMPTE_12_2_from_ST370(uint32_t st370_tc,
-					int frate_num, int frate_den,
-					struct klvanc_packet_smpte_12_2_s **pkt);
-
+int klvanc_create_SMPTE_12_2_from_ST370(uint32_t st370_tc, int frate_num, int frate_den,
+    struct klvanc_packet_smpte_12_2_s **pkt);
 
 /**
  * @brief       TODO - Brief description goes here.
@@ -137,8 +134,7 @@ void klvanc_free_SMPTE_12_2(void *p);
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
 int klvanc_convert_SMPTE_12_2_to_words(struct klvanc_context_s *ctx,
-				     struct klvanc_packet_smpte_12_2_s *pkt,
-				     uint16_t **words, uint16_t *wordCount);
+    struct klvanc_packet_smpte_12_2_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 /**
  * @brief	Convert type struct packet_smpte_12_2_s into a block of bytes which can be\n
@@ -152,8 +148,7 @@ int klvanc_convert_SMPTE_12_2_to_words(struct klvanc_context_s *ctx,
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
 int klvanc_convert_SMPTE_12_2_to_packetBytes(struct klvanc_context_s *ctx,
-					   const struct klvanc_packet_smpte_12_2_s *pkt,
-					   uint8_t **bytes, uint16_t *byteCount);
+    const struct klvanc_packet_smpte_12_2_s *pkt, uint8_t **bytes, uint16_t *byteCount);
 
 /**
  * @brief	Determine the appropriate line to insert this S-12 packet onto.

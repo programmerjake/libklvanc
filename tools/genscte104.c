@@ -28,7 +28,6 @@ static int failCount = 0;
 
 static int testcase_1(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -37,7 +36,7 @@ static int testcase_1(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -78,7 +77,6 @@ static int testcase_1(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_2(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -87,7 +85,7 @@ static int testcase_2(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -133,7 +131,6 @@ static int testcase_2(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_3(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -157,7 +154,8 @@ static int testcase_3(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	op->sr_data.avails_expected = 2;
 	op->sr_data.auto_return_flag = 1;
 
-	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_INSERT_AVAIL_DESCRIPTOR_REQUEST_DATA, &op);
+	ret =
+	    klvanc_SCTE_104_Add_MOM_Op(pkt, MO_INSERT_AVAIL_DESCRIPTOR_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -184,7 +182,6 @@ static int testcase_3(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_4(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -193,7 +190,7 @@ static int testcase_4(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -253,7 +250,6 @@ static int testcase_4(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_5(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -262,7 +258,7 @@ static int testcase_5(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -306,7 +302,6 @@ static int testcase_5(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_6(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -350,7 +345,6 @@ static int testcase_6(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_7(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -400,7 +394,6 @@ static int testcase_7(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_8(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -415,8 +408,7 @@ static int testcase_8(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 		return -1;
 	}
 
-	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_PROPRIETARY_COMMAND_REQUEST_DATA,
-					 &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_PROPRIETARY_COMMAND_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -452,7 +444,6 @@ static int testcase_8(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 
 static int testcase_9(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -461,7 +452,7 @@ static int testcase_9(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -500,9 +491,9 @@ static int testcase_9(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *
 	return 0;
 }
 
-static int testcase_10(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
+static int testcase_10(
+    struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -511,7 +502,7 @@ static int testcase_10(struct klvanc_context_s *ctx, uint16_t **words, uint16_t 
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -550,9 +541,9 @@ static int testcase_10(struct klvanc_context_s *ctx, uint16_t **words, uint16_t 
 	return 0;
 }
 
-static int testcase_11(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
+static int testcase_11(
+    struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -561,7 +552,7 @@ static int testcase_11(struct klvanc_context_s *ctx, uint16_t **words, uint16_t 
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -600,9 +591,9 @@ static int testcase_11(struct klvanc_context_s *ctx, uint16_t **words, uint16_t 
 	return 0;
 }
 
-static int testcase_12(struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
+static int testcase_12(
+    struct klvanc_context_s *ctx, uint16_t **words, uint16_t *wordCount)
 {
-
 	struct klvanc_packet_scte_104_s *pkt;
 	struct klvanc_multiple_operation_message_operation *op;
 	int ret;
@@ -611,7 +602,7 @@ static int testcase_12(struct klvanc_context_s *ctx, uint16_t **words, uint16_t 
 	if (ret != 0)
 		return -1;
 
-	ret =  klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
+	ret = klvanc_SCTE_104_Add_MOM_Op(pkt, MO_SPLICE_REQUEST_DATA, &op);
 	if (ret != 0) {
 		klvanc_free_SCTE_104(pkt);
 		return -1;
@@ -656,19 +647,18 @@ struct testcase {
 };
 
 struct testcase testcases[] = {
-	{ "Splice immediate + Insert Tier Data", testcase_1 },
-	{ "Splice immediate + DTMF", testcase_2 },
-	{ "Splice immediate + Insert Avail", testcase_3 },
-	{ "Splice immediate + Insert Segmentation", testcase_4 },
-	{ "Splice Immediate + Insert Time Descriptor", testcase_5 },
-	{ "Splice Null + Insert Time Descriptor", testcase_6 },
-	{ "Splice Null + Insert Descriptor", testcase_7 },
-	{ "Splice Null + Proprietary command", testcase_8 },
-	{ "SpliceEnd Immediate", testcase_9 },
-	{ "SpliceStart Normal", testcase_10 },
-	{ "SpliceEnd Normal", testcase_11 },
-	{ "Splice Cancel", testcase_12 },
-
+	{       "Splice immediate + Insert Tier Data",  testcase_1 },
+	{		   "Splice immediate + DTMF",  testcase_2 },
+	{	   "Splice immediate + Insert Avail",  testcase_3 },
+	{    "Splice immediate + Insert Segmentation",  testcase_4 },
+	{ "Splice Immediate + Insert Time Descriptor",  testcase_5 },
+	{      "Splice Null + Insert Time Descriptor",  testcase_6 },
+	{	   "Splice Null + Insert Descriptor",  testcase_7 },
+	{         "Splice Null + Proprietary command",  testcase_8 },
+	{		       "SpliceEnd Immediate",  testcase_9 },
+	{			"SpliceStart Normal", testcase_10 },
+	{			  "SpliceEnd Normal", testcase_11 },
+	{			     "Splice Cancel", testcase_12 },
 };
 #define NUM_TESTCASES sizeof(testcases) / sizeof(struct testcase)
 
@@ -685,7 +675,6 @@ int genscte104_main(int argc, char *argv[])
 		exit(1);
 	}
 	ctx->verbose = 1;
-
 
 	for (int i = 0; i < NUM_TESTCASES; i++) {
 		printf("Running test case %d: %s\n", i, testcases[i].name);
@@ -707,8 +696,8 @@ int genscte104_main(int argc, char *argv[])
 
 	klvanc_context_destroy(ctx);
 
-	printf("Final result: PASS: %d/%d, Failures: %d\n",
-	       passCount, passCount + failCount, failCount);
+	printf("Final result: PASS: %d/%d, Failures: %d\n", passCount,
+	    passCount + failCount, failCount);
 	if (failCount != 0)
 		return 1;
 	return 0;

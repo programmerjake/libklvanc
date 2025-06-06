@@ -34,8 +34,7 @@
 
 #define DEFAULT_PID 0x80
 
-static struct app_context_s
-{
+static struct app_context_s {
 	int verbose;
 	unsigned int pid;
 } app_context;
@@ -53,64 +52,62 @@ static void smpte2038_generate_sample_708B_packet(struct app_context_s *ctx)
 	 * that could be used for sample/test data.
 	 */
 	unsigned short arr[] = {
-		0x000, 0x3ff, 0x3ff, 0x161, 0x101, 0x152, 0x296, 0x269,
-		0x152, 0x14f, 0x277, 0x2b8, 0x1ad, 0x272, 0x1f4, 0x2fc,
-		0x180, 0x180, 0x1fd, 0x180, 0x180, 0x2fa, 0x200, 0x200,
-		0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200,
-		0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa,
-		0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200,
-		0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200,
-		0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa,
-		0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200,
-		0x2fa, 0x200, 0x200, 0x173, 0x2d1, 0x1e0, 0x200, 0x200,
+		0x000, 0x3ff, 0x3ff, 0x161, 0x101, 0x152, 0x296, 0x269, 0x152, 0x14f,
+		0x277, 0x2b8, 0x1ad, 0x272, 0x1f4, 0x2fc, 0x180, 0x180, 0x1fd, 0x180,
+		0x180, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200,
+		0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa,
+		0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200,
+		0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200,
+		0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa, 0x200, 0x200, 0x2fa,
+		0x200, 0x200, 0x2fa, 0x200, 0x200, 0x173, 0x2d1, 0x1e0, 0x200, 0x200,
 		0x200, 0x200, 0x200, 0x200, 0x274, 0x2b8, 0x1ad, 0x194,
 		0x1b4, /* Checksum */
 	};
 
 	/* See smpte 2038-2008 - Page 5, Table 2 for description. */
-	struct klbs_context_s *bs  = klbs_alloc();
+	struct klbs_context_s *bs = klbs_alloc();
 
 	uint8_t buf[8192] = { 0 };
 	klbs_write_set_buffer(bs, buf, sizeof(buf));
 
 	/* PES Header - Bug: bitstream can't write 32bit values */
-	klbs_write_bits(bs, 1, 24);		/* packet_start_code_prefix */
-	klbs_write_bits(bs, 0xBD, 8);		/* stream_id */
-	klbs_write_bits(bs, 0, 16);		/* PES_packet_length */
-	klbs_write_bits(bs, 2, 2);		/* '10' fixed value */
-	klbs_write_bits(bs, 0, 2);		/* PES_scrambling_control (not scrambled) */
-	klbs_write_bits(bs, 0, 1);		/* PES_priority */
-	klbs_write_bits(bs, 1, 1);		/* data_alignment_indicator (aligned) */
-	klbs_write_bits(bs, 0, 1);		/* copyright (not-copyright) */
-	klbs_write_bits(bs, 0, 1);		/* original-or-copy (copy) */
-	klbs_write_bits(bs, 2, 2);		/* PTS_DTS_flags (PTS Present) */
-	klbs_write_bits(bs, 0, 1);		/* ESCR_flag (not present) */
-	klbs_write_bits(bs, 0, 1);		/* ES_RATE_flag (not present) */
-	klbs_write_bits(bs, 0, 1);		/* DSM_TRICK_MODE_flag (not present) */
-	klbs_write_bits(bs, 0, 1);		/* additional_copy_info_flag (not present) */
-	klbs_write_bits(bs, 0, 1);		/* PES_CRC_flag (not present) */
-	klbs_write_bits(bs, 0, 1);		/* PES_EXTENSION_flag (not present) */
-	klbs_write_bits(bs, 5, 8);		/* PES_HEADER_DATA_length */
-	klbs_write_bits(bs, 2, 4);		/* '0010' fixed value */
+	klbs_write_bits(bs, 1, 24); /* packet_start_code_prefix */
+	klbs_write_bits(bs, 0xBD, 8); /* stream_id */
+	klbs_write_bits(bs, 0, 16); /* PES_packet_length */
+	klbs_write_bits(bs, 2, 2); /* '10' fixed value */
+	klbs_write_bits(bs, 0, 2); /* PES_scrambling_control (not scrambled) */
+	klbs_write_bits(bs, 0, 1); /* PES_priority */
+	klbs_write_bits(bs, 1, 1); /* data_alignment_indicator (aligned) */
+	klbs_write_bits(bs, 0, 1); /* copyright (not-copyright) */
+	klbs_write_bits(bs, 0, 1); /* original-or-copy (copy) */
+	klbs_write_bits(bs, 2, 2); /* PTS_DTS_flags (PTS Present) */
+	klbs_write_bits(bs, 0, 1); /* ESCR_flag (not present) */
+	klbs_write_bits(bs, 0, 1); /* ES_RATE_flag (not present) */
+	klbs_write_bits(bs, 0, 1); /* DSM_TRICK_MODE_flag (not present) */
+	klbs_write_bits(bs, 0, 1); /* additional_copy_info_flag (not present) */
+	klbs_write_bits(bs, 0, 1); /* PES_CRC_flag (not present) */
+	klbs_write_bits(bs, 0, 1); /* PES_EXTENSION_flag (not present) */
+	klbs_write_bits(bs, 5, 8); /* PES_HEADER_DATA_length */
+	klbs_write_bits(bs, 2, 4); /* '0010' fixed value */
 
 	uint64_t pts = 0;
-	klbs_write_bits(bs, (pts >> 30), 3);	/* PTS[32:30] */
-	klbs_write_bits(bs, 1, 1);			/* marker_bit */
-	klbs_write_bits(bs, (pts >> 15) & 0xefff, 15);	/* PTS[29:15] */
-	klbs_write_bits(bs, 1, 1);			/* marker_bit */
-	klbs_write_bits(bs, (pts & 0xefff), 15);		/* PTS[14:0] */
-	klbs_write_bits(bs, 1, 1);			/* marker_bit */
+	klbs_write_bits(bs, (pts >> 30), 3); /* PTS[32:30] */
+	klbs_write_bits(bs, 1, 1); /* marker_bit */
+	klbs_write_bits(bs, (pts >> 15) & 0xefff, 15); /* PTS[29:15] */
+	klbs_write_bits(bs, 1, 1); /* marker_bit */
+	klbs_write_bits(bs, (pts & 0xefff), 15); /* PTS[14:0] */
+	klbs_write_bits(bs, 1, 1); /* marker_bit */
 
 	int lineCount = 4;
 	for (int i = 0; i < lineCount; i++) {
 		/* VANC Payload */
-		klbs_write_bits(bs, 0, 6);	/* fixed value '000000' */
-		klbs_write_bits(bs, 0, 1);	/* c_not_y_channel_flag (HD luminance) */
-		klbs_write_bits(bs, 10 + i, 11);	/* line_number (9) */
-		klbs_write_bits(bs, 0, 12);	/* horizonal_offset (0 words from SAV) */
-		klbs_write_bits(bs, arr[3], 10);	/* DID */
-		klbs_write_bits(bs, arr[4], 10);	/* SDID */
-		klbs_write_bits(bs, arr[5], 10);	/* data_count */
+		klbs_write_bits(bs, 0, 6); /* fixed value '000000' */
+		klbs_write_bits(bs, 0, 1); /* c_not_y_channel_flag (HD luminance) */
+		klbs_write_bits(bs, 10 + i, 11); /* line_number (9) */
+		klbs_write_bits(bs, 0, 12); /* horizonal_offset (0 words from SAV) */
+		klbs_write_bits(bs, arr[3], 10); /* DID */
+		klbs_write_bits(bs, arr[4], 10); /* SDID */
+		klbs_write_bits(bs, arr[5], 10); /* data_count */
 		for (int i = 6; i < (sizeof(arr) / sizeof(unsigned short)); i++) {
 			/* This data_count AND checksum */
 			klbs_write_bits(bs, arr[i], 10);
@@ -118,7 +115,7 @@ static void smpte2038_generate_sample_708B_packet(struct app_context_s *ctx)
 
 		/* Byte alignment stuffing */
 		while (bs->reg_used > 0) {
-			klbs_write_bits(bs, 1, 1);	/* Stuffing byte */
+			klbs_write_bits(bs, 1, 1); /* Stuffing byte */
 		}
 	}
 
@@ -151,7 +148,8 @@ static void smpte2038_generate_sample_708B_packet(struct app_context_s *ctx)
 	uint8_t cc = 0;
 	ts_packetizer(section, section_length, &pkts, &packetCount, 188, &cc, ctx->pid);
 	for (uint32_t i = 0; i < packetCount; i++) {
-		printf("%s() We've constructed some TS packets, here they are:\n", __func__);
+		printf(
+		    "%s() We've constructed some TS packets, here they are:\n", __func__);
 		hexdump(pkts + (i * 188), 188, 16);
 	}
 
@@ -171,12 +169,11 @@ static int _usage(const char *progname, int status)
 {
 	fprintf(stderr, COPYRIGHT "\n");
 	fprintf(stderr, "Generate a SMPTE2038 stream containing 708 VANC\n");
-	fprintf(stderr, "Usage: %s [OPTIONS]\n"
-		"    -P <pid 0xNNNN> VANC PID to generate to (def: 0x%x)\n"
-		"    -h This help page\n",
-		basename((char *)progname),
-		DEFAULT_PID
-		);
+	fprintf(stderr,
+	    "Usage: %s [OPTIONS]\n"
+	    "    -P <pid 0xNNNN> VANC PID to generate to (def: 0x%x)\n"
+	    "    -h This help page\n",
+	    basename((char *) progname), DEFAULT_PID);
 	exit(status);
 }
 
@@ -187,13 +184,13 @@ static int _main(int argc, char *argv[])
 
 	while ((opt = getopt(argc, argv, "?h:P")) != -1) {
 		switch (opt) {
-                case 'P':
-                        if ((sscanf(optarg, "0x%x", &ctx->pid) != 1) || (ctx->pid > 0x1fff))
+		case 'P':
+			if ((sscanf(optarg, "0x%x", &ctx->pid) != 1) ||
+			    (ctx->pid > 0x1fff))
 				_usage(argv[0], 1);
-                        break;
+			break;
 		case '?':
-		case 'h':
-			_usage(argv[0], 0);
+		case 'h': _usage(argv[0], 0);
 		}
 	}
 

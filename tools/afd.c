@@ -34,8 +34,8 @@ static int failCount = 0;
 #define SHOW_DETAIL 1
 
 /* CALLBACKS for message notification */
-static int cb_afd(void *callback_context, struct klvanc_context_s *ctx,
-		      struct klvanc_packet_afd_s *pkt)
+static int cb_afd(
+    void *callback_context, struct klvanc_context_s *ctx, struct klvanc_packet_afd_s *pkt)
 {
 	int ret = -1;
 
@@ -64,19 +64,17 @@ static int cb_afd(void *callback_context, struct klvanc_context_s *ctx,
 	return 0;
 }
 
-static struct klvanc_callbacks_s callbacks =
-{
-	.afd		= cb_afd,
+static struct klvanc_callbacks_s callbacks = {
+	.afd = cb_afd,
 };
 /* END - CALLBACKS for message notification */
 
 /* svcinfo_present flag set but section missing */
-unsigned short test_data_afd_1[] = {
-	0x0000, 0x03ff, 0x03ff, 0x0241, 0x0205, 0x0108, 0x0200, 0x0200,
-	0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x014e
-};
+unsigned short test_data_afd_1[] = { 0x0000, 0x03ff, 0x03ff, 0x0241, 0x0205, 0x0108,
+	0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x0200, 0x014e };
 
-static int test_afd_u16(struct klvanc_context_s *ctx, const unsigned short *arr, int items)
+static int test_afd_u16(
+    struct klvanc_context_s *ctx, const unsigned short *arr, int items)
 {
 	int mismatch = 0;
 
@@ -131,7 +129,6 @@ static int test_afd(struct klvanc_context_s *ctx, const uint8_t *buf, size_t buf
 	int numWords = bufSize / 2;
 	int ret;
 
-
 	uint16_t *arr = malloc(bufSize);
 	if (arr == NULL)
 		return -1;
@@ -163,15 +160,16 @@ int afd_main(int argc, char *argv[])
 	ctx->callbacks = &callbacks;
 	printf("Library initialized.\n");
 
-	ret = test_afd_u16(ctx, test_data_afd_1, sizeof(test_data_afd_1) / sizeof(unsigned short));
+	ret = test_afd_u16(
+	    ctx, test_data_afd_1, sizeof(test_data_afd_1) / sizeof(unsigned short));
 	if (ret < 0)
 		fprintf(stderr, "AFD-1 failed to parse\n");
 
 	klvanc_context_destroy(ctx);
 	printf("Library destroyed.\n");
 
-	printf("Final result: PASS: %d/%d, Failures: %d\n",
-	       passCount, passCount + failCount, failCount);
+	printf("Final result: PASS: %d/%d, Failures: %d\n", passCount,
+	    passCount + failCount, failCount);
 	if (failCount != 0)
 		return 1;
 	return 0;

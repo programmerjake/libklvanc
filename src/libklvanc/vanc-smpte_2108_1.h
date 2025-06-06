@@ -70,8 +70,7 @@ struct klvanc_s2108_1_frame {
 /**
  * @brief Describes an ST2108 packet
  */
-struct klvanc_packet_smpte_2108_1_s
-{
+struct klvanc_packet_smpte_2108_1_s {
 	struct klvanc_packet_header_s hdr;
 
 	uint8_t payload[256];

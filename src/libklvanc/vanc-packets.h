@@ -34,13 +34,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-enum klvanc_packet_type_e
-{
+enum klvanc_packet_type_e {
 	VANC_TYPE_UNDEFINED = 0,
 	VANC_TYPE_AFD,
 	VANC_TYPE_EIA_708B,
@@ -55,21 +54,21 @@ enum klvanc_packet_type_e
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_header_s
-{
-	enum klvanc_packet_type_e	type;
-	unsigned short		adf[3];
-	unsigned short		did;
-	unsigned short		dbnsdid;
-	unsigned short		checksum;
+struct klvanc_packet_header_s {
+	enum klvanc_packet_type_e type;
+	unsigned short adf[3];
+	unsigned short did;
+	unsigned short dbnsdid;
+	unsigned short checksum;
 #define LIBKLVANC_PACKET_MAX_PAYLOAD (16384)
-	unsigned short		payload[LIBKLVANC_PACKET_MAX_PAYLOAD];
-	unsigned short		payloadLengthWords;
-	unsigned int 		checksumValid;
-	unsigned int		lineNr; 		/**< The vanc in this header came from line.... */
-	unsigned short		raw[LIBKLVANC_PACKET_MAX_PAYLOAD];
-	unsigned int 		rawLengthWords;
-	unsigned short		horizontalOffset;	/**< Horizontal word where the ADF was detected. */
+	unsigned short payload[LIBKLVANC_PACKET_MAX_PAYLOAD];
+	unsigned short payloadLengthWords;
+	unsigned int checksumValid;
+	unsigned int lineNr; /**< The vanc in this header came from line.... */
+	unsigned short raw[LIBKLVANC_PACKET_MAX_PAYLOAD];
+	unsigned int rawLengthWords;
+	unsigned short
+	    horizontalOffset; /**< Horizontal word where the ADF was detected. */
 };
 
 /**
@@ -84,6 +83,6 @@ struct klvanc_packet_header_s
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_PACKETS_H */

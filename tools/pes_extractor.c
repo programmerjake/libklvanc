@@ -29,7 +29,8 @@
 #define LOCAL_DEBUG 0
 
 /* PES Extractor mechanism, so convert MULTIPLE TS packets containing PES VANC, into PES array. */
-int pe_alloc(struct pes_extractor_s **pe, void *user_context, pes_extractor_callback cb, uint16_t pid)
+int pe_alloc(struct pes_extractor_s **pe, void *user_context, pes_extractor_callback cb,
+    uint16_t pid)
 {
 	struct pes_extractor_s *p = calloc(1, sizeof(*p));
 	if (!p)
@@ -72,22 +73,22 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 #if LOCAL_DEBUG
 	printf("%s(len = %d)\n", __func__, len);
 #endif
-        int offset = 4;
+	int offset = 4;
 #if 0
 	if (*(pkt + 1) & 0x40)
                 section_offset++;
 #endif
 
-        unsigned char adaption = (*(pkt + 3) >> 4) & 0x03;
-        if ((adaption == 2) || (adaption == 3)) {
-                if (offset == 4)
-                        offset++;
-                offset += *(pkt + 4);
-        }
+	unsigned char adaption = (*(pkt + 3) >> 4) & 0x03;
+	if ((adaption == 2) || (adaption == 3)) {
+		if (offset == 4)
+			offset++;
+		offset += *(pkt + 4);
+	}
 
 	/* Regardless, append all packete data from offset to end of packet into the buffer */
 	size_t wlen = pe->packet_size - offset;
-	size_t l = rb_write(pe->rb, (const char *)pkt + offset, wlen);
+	size_t l = rb_write(pe->rb, (const char *) pkt + offset, wlen);
 	if (l != wlen) {
 		printf("Write error, l = %zu, wlen = %zu\n", l, wlen);
 		return;
@@ -99,7 +100,7 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 		if (!pe->has_sync && rb_used(pe->rb) > 16) {
 			unsigned char hdr[] = { 0, 0, 1, 0xbd };
 			unsigned char b[4];
-			rb_read(pe->rb, (char *)&b[0], sizeof(b));
+			rb_read(pe->rb, (char *) &b[0], sizeof(b));
 			for (size_t i = 0; i < rb_used(pe->rb); i++) {
 				if (memcmp(b, hdr, sizeof(hdr)) == 0) {
 					pe->has_sync = 1;
@@ -108,7 +109,7 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 				b[0] = b[1];
 				b[1] = b[2];
 				b[2] = b[3];
-				rb_read(pe->rb, (char *)&b[3], 1);
+				rb_read(pe->rb, (char *) &b[3], 1);
 			}
 		}
 
@@ -122,7 +123,7 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 
 		/* We have at least one viable message, probably..... */
 		char l[2];
-		if (rb_peek(pe->rb, (char *)&l[0], 2) != 2) {
+		if (rb_peek(pe->rb, (char *) &l[0], 2) != 2) {
 			fprintf(stderr, "Unable to peek two ring buffer bytes\n");
 			break;
 		}
@@ -139,7 +140,7 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 				msg[3] = 0xbd;
 
 				/* Read the peeked length and the entire message */
-				rb_read(pe->rb, (char *)msg + 4, pes_length + 2);
+				rb_read(pe->rb, (char *) msg + 4, pes_length + 2);
 #if LOCAL_DEBUG
 				hexdump(msg, pes_length + 6, 16);
 #endif
@@ -151,10 +152,8 @@ static void pe_processPacket(struct pes_extractor_s *pe, unsigned char *pkt, int
 		} else {
 #if LOCAL_DEBUG
 			printf("Need more data #2 - got 0x%x (%d) need 0x%x (%d)\n",
-				rb_used(pe->rb) + 2,
-				rb_used(pe->rb) + 2,
-				pes_length,
-				pes_length);
+			    rb_used(pe->rb) + 2, rb_used(pe->rb) + 2, pes_length,
+			    pes_length);
 #endif
 			break; /* Need more data */
 		}
@@ -166,14 +165,17 @@ size_t pe_push(struct pes_extractor_s *pe, unsigned char *pkt, int packetCount)
 #if LOCAL_DEBUG
 	printf("%s(packetCount = 0x%x)\n", __func__, packetCount);
 #endif
-        if ((!pe) || (packetCount < 1) || (!pkt))
-                return 0;
+	if ((!pe) || (packetCount < 1) || (!pkt))
+		return 0;
 
-        for (int i = 0; i < packetCount; i++) {
-		uint16_t pid = ((*(pkt + (i * pe->packet_size) + 1) << 8) | *(pkt + (i * pe->packet_size) + 2)) & 0x1fff;
-                if (pid == pe->pid) {
-                        pe_processPacket(pe, pkt + (i * pe->packet_size), pe->packet_size);
-                }
-        }
-        return packetCount;
+	for (int i = 0; i < packetCount; i++) {
+		uint16_t pid = ((*(pkt + (i * pe->packet_size) + 1) << 8) |
+				   *(pkt + (i * pe->packet_size) + 2)) &
+		    0x1fff;
+		if (pid == pe->pid) {
+			pe_processPacket(
+			    pe, pkt + (i * pe->packet_size), pe->packet_size);
+		}
+	}
+	return packetCount;
 }

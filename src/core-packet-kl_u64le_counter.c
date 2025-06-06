@@ -45,12 +45,14 @@ int klvanc_dump_KL_U64LE_COUNTER(struct klvanc_context_s *ctx, void *p)
 
 	struct klvanc_packet_kl_u64le_counter_s *pkt = p;
 
-	PRINT_DEBUG("%s() KL_U64LE_COUNTER: %" PRIu64 " [%" PRIx64 "]\n", __func__, pkt->counter, pkt->counter);
+	PRINT_DEBUG("%s() KL_U64LE_COUNTER: %" PRIu64 " [%" PRIx64 "]\n", __func__,
+	    pkt->counter, pkt->counter);
 
 	return KLAPI_OK;
 }
 
-int parse_KL_U64LE_COUNTER(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
+int parse_KL_U64LE_COUNTER(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
 	if (ctx->callbacks == NULL || ctx->callbacks->kl_i64le_counter == NULL)
 		return KLAPI_OK;
@@ -65,14 +67,14 @@ int parse_KL_U64LE_COUNTER(struct klvanc_context_s *ctx, struct klvanc_packet_he
 	memcpy(&pkt->hdr, hdr, sizeof(*hdr));
 
 	pkt->counter = 0;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[0]) << 56;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[1]) << 48;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[2]) << 40;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[3]) << 32;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[4]) << 24;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[5]) << 16;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[6]) <<  8;
-	pkt->counter |= (uint64_t)sanitizeWord(hdr->payload[7]);
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[0]) << 56;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[1]) << 48;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[2]) << 40;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[3]) << 32;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[4]) << 24;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[5]) << 16;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[6]) << 8;
+	pkt->counter |= (uint64_t) sanitizeWord(hdr->payload[7]);
 
 	ctx->callbacks->kl_i64le_counter(ctx->callback_context, ctx, pkt);
 
@@ -80,8 +82,8 @@ int parse_KL_U64LE_COUNTER(struct klvanc_context_s *ctx, struct klvanc_packet_he
 	return KLAPI_OK;
 }
 
-int klvanc_convert_KL_U64LE_COUNTER_to_words(struct klvanc_packet_kl_u64le_counter_s *pkt,
-					     uint16_t **words, uint16_t *wordCount)
+int klvanc_convert_KL_U64LE_COUNTER_to_words(
+    struct klvanc_packet_kl_u64le_counter_s *pkt, uint16_t **words, uint16_t *wordCount)
 {
 	uint8_t buf[8];
 	buf[0] = pkt->counter >> 56;

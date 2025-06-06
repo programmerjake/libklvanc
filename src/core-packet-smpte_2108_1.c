@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 static const char *lookupFrameType(unsigned char frame_type)
 {
 	switch (frame_type) {
@@ -45,41 +44,54 @@ int klvanc_dump_SMPTE_2108_1(struct klvanc_context_s *ctx, void *p)
 	char *colorchan = "GBR";
 
 	if (ctx->verbose)
-		PRINT_DEBUG("%s() %p\n", __func__, (void *)pkt);
+		PRINT_DEBUG("%s() %p\n", __func__, (void *) pkt);
 
 	for (int n = 0; n < pkt->num_frames; n++) {
 		struct klvanc_s2108_1_frame *frame = &pkt->frames[n];
-		PRINT_DEBUG(" frame_type = 0x%02x - %s\n", frame->frame_type, lookupFrameType(frame->frame_type));
+		PRINT_DEBUG(" frame_type = 0x%02x - %s\n", frame->frame_type,
+		    lookupFrameType(frame->frame_type));
 		PRINT_DEBUG(" frame_length = 0x%02x\n", frame->frame_length);
 
 		if (frame->frame_type == KLVANC_HDR_STATIC1) {
 			for (int i = 0; i < 3; i++) {
-				uint16_t val =  frame->static1.display_primaries_x[i];
-				PRINT_DEBUG("   display_primaries_x[%d] = %d (%c: %f)\n", i, val, colorchan[i], (float)val * 0.00002);
+				uint16_t val = frame->static1.display_primaries_x[i];
+				PRINT_DEBUG("   display_primaries_x[%d] = %d (%c: %f)\n",
+				    i, val, colorchan[i], (float) val * 0.00002);
 				val = frame->static1.display_primaries_y[i];
-				PRINT_DEBUG("   display_primaries_y[%d] = %d (%c: %f)\n", i, val, colorchan[i], (float)val * 0.00002);
+				PRINT_DEBUG("   display_primaries_y[%d] = %d (%c: %f)\n",
+				    i, val, colorchan[i], (float) val * 0.00002);
 			}
 
-			PRINT_DEBUG("   white_point_x = %d (%f)\n", frame->static1.white_point_x,
-				    (float)frame->static1.white_point_x * 0.00002);
-			PRINT_DEBUG("   white_point_y = %d (%f)\n", frame->static1.white_point_y,
-				    (float)frame->static1.white_point_y * 0.00002);
-			PRINT_DEBUG("   max_display_mastering_luminance = %d (%f)\n", frame->static1.max_display_mastering_luminance,
-				    (float)frame->static1.max_display_mastering_luminance * 0.0001);
-			PRINT_DEBUG("   min_display_mastering_luminance = %d (%f)\n", frame->static1.min_display_mastering_luminance,
-				    (float)frame->static1.min_display_mastering_luminance * 0.0001);
+			PRINT_DEBUG("   white_point_x = %d (%f)\n",
+			    frame->static1.white_point_x,
+			    (float) frame->static1.white_point_x * 0.00002);
+			PRINT_DEBUG("   white_point_y = %d (%f)\n",
+			    frame->static1.white_point_y,
+			    (float) frame->static1.white_point_y * 0.00002);
+			PRINT_DEBUG("   max_display_mastering_luminance = %d (%f)\n",
+			    frame->static1.max_display_mastering_luminance,
+			    (float) frame->static1.max_display_mastering_luminance *
+				0.0001);
+			PRINT_DEBUG("   min_display_mastering_luminance = %d (%f)\n",
+			    frame->static1.min_display_mastering_luminance,
+			    (float) frame->static1.min_display_mastering_luminance *
+				0.0001);
 		} else if (frame->frame_type == KLVANC_HDR_STATIC2) {
-			PRINT_DEBUG("   max_content_light_level = %d\n", frame->static2.max_content_light_level);
-			PRINT_DEBUG("   max_pic_average_light_level = %d\n", frame->static2.max_pic_average_light_level);
+			PRINT_DEBUG("   max_content_light_level = %d\n",
+			    frame->static2.max_content_light_level);
+			PRINT_DEBUG("   max_pic_average_light_level = %d\n",
+			    frame->static2.max_pic_average_light_level);
 		} else {
-			PRINT_DEBUG("   Decoding of frame type 0x%02x not supported\n", frame->frame_type);
+			PRINT_DEBUG("   Decoding of frame type 0x%02x not supported\n",
+			    frame->frame_type);
 		}
 	}
 
 	return KLAPI_OK;
 }
 
-int parse_SMPTE_2108_1(struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
+int parse_SMPTE_2108_1(
+    struct klvanc_context_s *ctx, struct klvanc_packet_header_s *hdr, void **pp)
 {
 	struct klbs_context_s *bs;
 
@@ -97,7 +109,7 @@ int parse_SMPTE_2108_1(struct klvanc_context_s *ctx, struct klvanc_packet_header
 	if (!pkt) {
 		klbs_free(bs);
 		return -ENOMEM;
-        }
+	}
 
 	memcpy(&pkt->hdr, hdr, sizeof(*hdr));
 
@@ -130,16 +142,21 @@ int parse_SMPTE_2108_1(struct klvanc_context_s *ctx, struct klvanc_packet_header
 
 		if (frame->frame_type == KLVANC_HDR_STATIC1) {
 			for (int i = 0; i < 3; i++) {
-				frame->static1.display_primaries_x[i] = klbs_read_bits(bs, 16);
-				frame->static1.display_primaries_y[i] = klbs_read_bits(bs, 16);
+				frame->static1.display_primaries_x[i] =
+				    klbs_read_bits(bs, 16);
+				frame->static1.display_primaries_y[i] =
+				    klbs_read_bits(bs, 16);
 			}
 			frame->static1.white_point_x = klbs_read_bits(bs, 16);
 			frame->static1.white_point_y = klbs_read_bits(bs, 16);
-			frame->static1.max_display_mastering_luminance = klbs_read_bits(bs, 32);
-			frame->static1.min_display_mastering_luminance = klbs_read_bits(bs, 32);
+			frame->static1.max_display_mastering_luminance =
+			    klbs_read_bits(bs, 32);
+			frame->static1.min_display_mastering_luminance =
+			    klbs_read_bits(bs, 32);
 		} else if (frame->frame_type == KLVANC_HDR_STATIC2) {
 			frame->static2.max_content_light_level = klbs_read_bits(bs, 16);
-			frame->static2.max_pic_average_light_level = klbs_read_bits(bs, 16);
+			frame->static2.max_pic_average_light_level =
+			    klbs_read_bits(bs, 16);
 		} else {
 			klbs_read_bits(bs, 8 * (frame->frame_length - 2));
 		}

@@ -28,11 +28,11 @@
 extern "C" {
 #endif
 
-int ts_packetizer(uint8_t *buf, unsigned int byteCount, uint8_t **pkts, uint32_t *packetCount, int packetSize, uint8_t *cc, uint16_t pid);
+int ts_packetizer(uint8_t *buf, unsigned int byteCount, uint8_t **pkts,
+    uint32_t *packetCount, int packetSize, uint8_t *cc, uint16_t pid);
 
 #ifdef __cplusplus
 };
 #endif
-
 
 #endif /* TS_PACKETIZER_H */

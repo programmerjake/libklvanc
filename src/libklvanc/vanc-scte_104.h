@@ -33,39 +33,39 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-#define SO_INIT_REQUEST_DATA     0x001
+#define SO_INIT_REQUEST_DATA 0x001
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define MO_SPLICE_REQUEST_DATA     0x101
+#define MO_SPLICE_REQUEST_DATA 0x101
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define MO_SPLICE_NULL_REQUEST_DATA  0x102
+#define MO_SPLICE_NULL_REQUEST_DATA 0x102
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define MO_TIME_SIGNAL_REQUEST_DATA  0x104
-#define MO_INSERT_DESCRIPTOR_REQUEST_DATA    0x108
-#define MO_INSERT_DTMF_REQUEST_DATA  0x109
-#define MO_INSERT_AVAIL_DESCRIPTOR_REQUEST_DATA  0x10a
-#define MO_INSERT_SEGMENTATION_REQUEST_DATA  0x10b
-#define MO_PROPRIETARY_COMMAND_REQUEST_DATA  0x10c
-#define MO_INSERT_TIER_DATA  0x10f
-#define MO_INSERT_TIME_DESCRIPTOR  0x110
+#define MO_TIME_SIGNAL_REQUEST_DATA 0x104
+#define MO_INSERT_DESCRIPTOR_REQUEST_DATA 0x108
+#define MO_INSERT_DTMF_REQUEST_DATA 0x109
+#define MO_INSERT_AVAIL_DESCRIPTOR_REQUEST_DATA 0x10a
+#define MO_INSERT_SEGMENTATION_REQUEST_DATA 0x10b
+#define MO_PROPRIETARY_COMMAND_REQUEST_DATA 0x10c
+#define MO_INSERT_TIER_DATA 0x10f
+#define MO_INSERT_TIME_DESCRIPTOR 0x110
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define SPLICESTART_NORMAL    0x01
+#define SPLICESTART_NORMAL 0x01
 
 /**
  * @brief       TODO - Brief description goes here.
@@ -75,23 +75,22 @@ extern "C" {
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define SPLICEEND_NORMAL      0x03
+#define SPLICEEND_NORMAL 0x03
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define SPLICEEND_IMMEDIATE   0x04
+#define SPLICEEND_IMMEDIATE 0x04
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-#define SPLICE_CANCEL         0x05
+#define SPLICE_CANCEL 0x05
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_single_operation_message
-{
+struct klvanc_single_operation_message {
 	/* single_operation_message */
 	/* SCTE104 Spec 2012 - table 7.1 */
 	unsigned short opID;
@@ -107,8 +106,7 @@ struct klvanc_single_operation_message
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_multiple_operation_message_timestamp
-{
+struct klvanc_multiple_operation_message_timestamp {
 	/* SCTE Spec table 11.2 */
 	unsigned char time_type;
 	union {
@@ -132,14 +130,13 @@ struct klvanc_multiple_operation_message_timestamp
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_splice_request_data
-{
+struct klvanc_splice_request_data {
 	/* SCTE 104 Table 8-5 */
 	unsigned int splice_insert_type;
 	unsigned int splice_event_id;
 	unsigned short unique_program_id;
-	unsigned short pre_roll_time;	/* In 1/10's of a second */
-	unsigned short brk_duration;	/* In 1/10's of a second */
+	unsigned short pre_roll_time; /* In 1/10's of a second */
+	unsigned short brk_duration; /* In 1/10's of a second */
 	unsigned char avail_num;
 	unsigned char avails_expected;
 	unsigned char auto_return_flag;
@@ -148,17 +145,15 @@ struct klvanc_splice_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_time_signal_request_data
-{
+struct klvanc_time_signal_request_data {
 	/* SCTE 104 Table 8-23 */
-	unsigned short pre_roll_time;	/* In milliseconds */
+	unsigned short pre_roll_time; /* In milliseconds */
 };
 
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_avail_descriptor_request_data
-{
+struct klvanc_avail_descriptor_request_data {
 	/* SCTE 104 Table 8-26 */
 	unsigned int num_provider_avails;
 	uint32_t provider_avail_id[255];
@@ -167,8 +162,7 @@ struct klvanc_avail_descriptor_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_insert_descriptor_request_data
-{
+struct klvanc_insert_descriptor_request_data {
 	/* SCTE 104 Table 8-27 */
 	unsigned int descriptor_count;
 	unsigned int total_length;
@@ -178,10 +172,9 @@ struct klvanc_insert_descriptor_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_dtmf_descriptor_request_data
-{
+struct klvanc_dtmf_descriptor_request_data {
 	/* SCTE 104 Table 8-28 */
-	unsigned char pre_roll_time;	/* In 1/10's of a second */
+	unsigned char pre_roll_time; /* In 1/10's of a second */
 	unsigned int dtmf_length;
 	char dtmf_char[7];
 };
@@ -189,8 +182,7 @@ struct klvanc_dtmf_descriptor_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_segmentation_descriptor_request_data
-{
+struct klvanc_segmentation_descriptor_request_data {
 	/* SCTE 104 Table 8-29 */
 	unsigned int event_id;
 	unsigned int event_cancel_indicator;
@@ -212,8 +204,7 @@ struct klvanc_segmentation_descriptor_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_time_descriptor_data
-{
+struct klvanc_time_descriptor_data {
 	/* SCTE 104 2015 Table 9-32 */
 	uint64_t TAI_seconds;
 	unsigned int TAI_ns;
@@ -223,8 +214,7 @@ struct klvanc_time_descriptor_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_proprietary_command_request_data
-{
+struct klvanc_proprietary_command_request_data {
 	/* SCTE 104 Table 9-30 */
 	unsigned int proprietary_id;
 	unsigned int proprietary_command;
@@ -235,8 +225,7 @@ struct klvanc_proprietary_command_request_data
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_tier_data
-{
+struct klvanc_tier_data {
 	/* SCTE 104 Table 9-31 */
 	unsigned short tier_data;
 };
@@ -261,8 +250,7 @@ struct klvanc_multiple_operation_message_operation {
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_multiple_operation_message
-{
+struct klvanc_multiple_operation_message {
 	/* multiple_operation_message */
 	/* SCTE Spec table 7.2 */
 	unsigned short rsvd;
@@ -280,8 +268,7 @@ struct klvanc_multiple_operation_message
 /**
  * @brief       TODO - Brief description goes here.
  */
-struct klvanc_packet_scte_104_s
-{
+struct klvanc_packet_scte_104_s {
 	struct klvanc_packet_header_s hdr;
 
 	/* See SMPTE 2010:2008 page 5 */
@@ -291,13 +278,13 @@ struct klvanc_packet_scte_104_s
 	int following_pkt;
 	int duplicate_msg;
 
-	unsigned char payload[2000]; /* ST2010-2008 section 5.3.3. Grown from 256 to support 2k messages */
+	unsigned char payload
+	    [2000]; /* ST2010-2008 section 5.3.3. Grown from 256 to support 2k messages */
 	unsigned int payloadLengthBytes;
 
 	struct klvanc_single_operation_message so_msg;
 	struct klvanc_multiple_operation_message mo_msg;
 };
-
 
 /**
  * @brief       Create a SCTE-104 structure
@@ -340,8 +327,7 @@ void klvanc_free_SCTE_104(void *p);
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
 int klvanc_convert_SCTE_104_packetbytes_to_SMPTE_2010(struct klvanc_context_s *ctx,
-                                                      uint8_t *inBytes, uint16_t inCount,
-                                                      uint8_t **bytes, uint16_t *byteCount);
+    uint8_t *inBytes, uint16_t inCount, uint8_t **bytes, uint16_t *byteCount);
 
 /**
  * @brief	Convert type struct packet_scte_104_s into a more traditional line of\n
@@ -356,8 +342,7 @@ int klvanc_convert_SCTE_104_packetbytes_to_SMPTE_2010(struct klvanc_context_s *c
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
 int klvanc_convert_SCTE_104_to_words(struct klvanc_context_s *ctx,
-				     struct klvanc_packet_scte_104_s *pkt,
-				     uint16_t **words, uint16_t *wordCount);
+    struct klvanc_packet_scte_104_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 /**
  * @brief	Convert type struct packet_scte_104_s into a block of bytes which can be
@@ -372,14 +357,13 @@ int klvanc_convert_SCTE_104_to_words(struct klvanc_context_s *ctx,
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
 int klvanc_convert_SCTE_104_to_packetBytes(struct klvanc_context_s *ctx,
-					   const struct klvanc_packet_scte_104_s *pkt,
-					   uint8_t **bytes, uint16_t *byteCount);
+    const struct klvanc_packet_scte_104_s *pkt, uint8_t **bytes, uint16_t *byteCount);
 
 int klvanc_SCTE_104_Add_MOM_Op(struct klvanc_packet_scte_104_s *pkt, uint16_t opId,
-			       struct klvanc_multiple_operation_message_operation **op);
+    struct klvanc_multiple_operation_message_operation **op);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_SCTE_104_H */

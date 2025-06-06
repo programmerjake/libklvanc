@@ -73,7 +73,8 @@ int klvanc_checksum_is_valid(const uint16_t *words, int wordCount)
 	uint16_t sum = klvanc_checksum_calculate(words, wordCount - 1);
 	if (sum != *(words + (wordCount - 1))) {
 #if LOCAL_DEBUG
-		fprintf(stderr, "Checksum calculated as %04x, but passed as %04x\n", sum, *(words + (wordCount - 1)));
+		fprintf(stderr, "Checksum calculated as %04x, but passed as %04x\n", sum,
+		    *(words + (wordCount - 1)));
 #endif
 		return 0;
 	}

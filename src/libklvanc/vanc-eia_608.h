@@ -33,13 +33,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
 /**
  * @brief	TODO - Brief description goes here.
  */
-struct klvanc_packet_eia_608_s
-{
+struct klvanc_packet_eia_608_s {
 	struct klvanc_packet_header_s hdr;
 	int nr;
 	unsigned char payload[3];
@@ -84,7 +83,8 @@ void klvanc_destroy_EIA_608(struct klvanc_packet_eia_608_s *pkt);
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_EIA_608_to_packetBytes(struct klvanc_packet_eia_608_s *pkt, uint8_t **bytes, uint16_t *byteCount);
+int klvanc_convert_EIA_608_to_packetBytes(
+    struct klvanc_packet_eia_608_s *pkt, uint8_t **bytes, uint16_t *byteCount);
 
 /**
  * @brief	Convert type struct klvanc_packet_eia_608_s into a more traditional line of\n
@@ -97,10 +97,11 @@ int klvanc_convert_EIA_608_to_packetBytes(struct klvanc_packet_eia_608_s *pkt, u
  * @return      < 0 - Error
  * @return      -ENOMEM - Not enough memory to satisfy request
  */
-int klvanc_convert_EIA_608_to_words(struct klvanc_packet_eia_608_s *pkt, uint16_t **words, uint16_t *wordCount);
+int klvanc_convert_EIA_608_to_words(
+    struct klvanc_packet_eia_608_s *pkt, uint16_t **words, uint16_t *wordCount);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_EIA_608_H */

@@ -33,25 +33,23 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
-struct klvanc_cache_line_s
-{
-	int             active;
-	uint64_t        count;
+struct klvanc_cache_line_s {
+	int active;
+	uint64_t count;
 	pthread_mutex_t mutex;
 	struct klvanc_packet_header_s *pkt;
 };
 
-struct klvanc_cache_s
-{
-	uint32_t       did, sdid;
-	const char    *desc, *spec;
+struct klvanc_cache_s {
+	uint32_t did, sdid;
+	const char *desc, *spec;
 	struct timeval lastUpdated;
-	int            hasCursor;
-	int            expandUI;
-	int            save;
-	uint32_t       activeCount;
+	int hasCursor;
+	int expandUI;
+	int save;
+	uint32_t activeCount;
 	struct klvanc_cache_line_s lines[2048];
 };
 
@@ -80,10 +78,11 @@ void klvanc_cache_reset(struct klvanc_context_s *ctx);
  * @return      0 - Success
  * @return      < 0 - Error
  */
-struct klvanc_cache_s * klvanc_cache_lookup(struct klvanc_context_s *ctx, uint8_t didnr, uint8_t sdidnr);
+struct klvanc_cache_s *klvanc_cache_lookup(
+    struct klvanc_context_s *ctx, uint8_t didnr, uint8_t sdidnr);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_CACHE_H */

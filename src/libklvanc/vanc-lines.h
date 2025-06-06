@@ -42,23 +42,21 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif  
+#endif
 
-#define KLVANC_MAX_VANC_LINES   64
+#define KLVANC_MAX_VANC_LINES 64
 #define KLVANC_MAX_VANC_ENTRIES 16
 
-struct klvanc_entry_s
-{
-        int h_offset;
-        uint16_t *payload;
-        int pixel_width;
+struct klvanc_entry_s {
+	int h_offset;
+	uint16_t *payload;
+	int pixel_width;
 };
 
 /**
  * @brief	Represents a VANC line prior to serialization
  */
-struct klvanc_line_s
-{
+struct klvanc_line_s {
 	int line_number;
 	struct klvanc_entry_s *p_entries[KLVANC_MAX_VANC_ENTRIES];
 	int num_entries;
@@ -67,9 +65,8 @@ struct klvanc_line_s
 /**
  * @brief	Represents a group of VANC lines (e.g. perhaps corresponding to a video frame)
  */
-    
-struct klvanc_line_set_s
-{
+
+struct klvanc_line_set_s {
 	int num_lines;
 	struct klvanc_line_s *lines[KLVANC_MAX_VANC_LINES];
 };
@@ -106,7 +103,7 @@ void klvanc_line_free(struct klvanc_line_s *line);
  * @return      -ENOMEM - insufficient memory to store the VANC packet
  */
 int klvanc_line_insert(struct klvanc_context_s *ctx, struct klvanc_line_set_s *vanc_lines,
-		       uint16_t *pixels, int pixel_width, int line_number, int horizontal_offset);
+    uint16_t *pixels, int pixel_width, int line_number, int horizontal_offset);
 
 /**
  * @brief	Generate pixel array representing a fully formed VANC line.  This
@@ -133,7 +130,7 @@ int klvanc_line_insert(struct klvanc_context_s *ctx, struct klvanc_line_set_s *v
  * @return      -ENOMEM - insufficient memory to store the VANC packet
  */
 int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s *line,
-			      uint16_t **out_buf, int *out_len, int line_pixel_width);
+    uint16_t **out_buf, int *out_len, int line_pixel_width);
 
 /**
  * @brief	Generate byte array representing a fully formed VANC line.  This
@@ -158,11 +155,11 @@ int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s
  * @return      0 - Success
  * @return      -ENOMEM - insufficient memory to store the VANC packet
  */
-int klvanc_generate_vanc_line_v210(struct klvanc_context_s *ctx, struct klvanc_line_s *line,
-				   uint8_t *out_buf, int line_pixel_width);
+int klvanc_generate_vanc_line_v210(struct klvanc_context_s *ctx,
+    struct klvanc_line_s *line, uint8_t *out_buf, int line_pixel_width);
 
 #ifdef __cplusplus
 };
-#endif  
+#endif
 
 #endif /* _VANC_LINES_H */

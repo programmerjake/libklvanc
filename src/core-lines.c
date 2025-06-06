@@ -31,7 +31,7 @@
 struct klvanc_line_s *klvanc_line_create(int line_number)
 {
 	struct klvanc_line_s *new_line = NULL;
-	new_line = (struct klvanc_line_s *)malloc(sizeof(struct klvanc_line_s));
+	new_line = (struct klvanc_line_s *) malloc(sizeof(struct klvanc_line_s));
 	if (new_line == NULL)
 		return NULL;
 	memset(new_line, 0, sizeof(struct klvanc_line_s));
@@ -51,17 +51,16 @@ void klvanc_line_free(struct klvanc_line_s *line)
 }
 
 int klvanc_line_insert(struct klvanc_context_s *ctx, struct klvanc_line_set_s *vanc_lines,
-		       uint16_t * pixels, int pixel_width, int line_number, int horizontal_offset)
+    uint16_t *pixels, int pixel_width, int line_number, int horizontal_offset)
 {
 	int i;
 	struct klvanc_line_s *line = vanc_lines->lines[0];
 	struct klvanc_entry_s *new_entry =
-	    (struct klvanc_entry_s *)malloc(sizeof(struct klvanc_entry_s));
+	    (struct klvanc_entry_s *) malloc(sizeof(struct klvanc_entry_s));
 	if (new_entry == NULL)
 		return -ENOMEM;
 
-	new_entry->payload =
-	    (uint16_t *) malloc(pixel_width * sizeof(uint16_t));
+	new_entry->payload = (uint16_t *) malloc(pixel_width * sizeof(uint16_t));
 	if (new_entry->payload == NULL) {
 		free(new_entry);
 		return -ENOMEM;
@@ -119,14 +118,14 @@ static int vanc_ent_comp(const void *a, const void *b)
 }
 
 int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s *line,
-			      uint16_t ** outbuf, int *out_len, int line_pixel_width)
+    uint16_t **outbuf, int *out_len, int line_pixel_width)
 {
 	int pixels_used = 0;
 	int i;
 
 	/* Sort the VANC entries on the line prior to processing */
 	qsort(line->p_entries, line->num_entries, sizeof(struct klvanc_entry_s *),
-	      vanc_ent_comp);
+	    vanc_ent_comp);
 
 	/* Now iterate through and adjust any offsets to prevent overlap.  Also calculate
 	   how big a buffer we need for the final array of pixels */
@@ -144,12 +143,11 @@ int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s
 
 		/* Check all bytes after VANC start words for illegal values */
 		for (int j = 3; j < entry->pixel_width; j++) {
-			if (entry->payload[j] <= 0x0003
-			    || entry->payload[j] >= 0x03FC) {
-				PRINT_DEBUG(
-					"VANC line %d has entry with illegal payload at offset %d. Skipping.  offset=%d len=%d",
-					line->line_number, j, entry->h_offset,
-					entry->pixel_width);
+			if (entry->payload[j] <= 0x0003 || entry->payload[j] >= 0x03FC) {
+				PRINT_DEBUG("VANC line %d has entry with illegal payload "
+				            "at offset %d. Skipping.  offset=%d len=%d",
+				    line->line_number, j, entry->h_offset,
+				    entry->pixel_width);
 				for (int k = 0; k < entry->pixel_width; k++) {
 					PRINT_DEBUG("%04x ", entry->payload[k]);
 				}
@@ -162,10 +160,9 @@ int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s
 		/* Don't let sum of all VANC entries overflow end of line */
 		if ((entry->h_offset + entry->pixel_width) > line_pixel_width) {
 			/* Set the length to zero so this entry gets skipped */
-			PRINT_DEBUG(
-				"VANC line %d would overflow thus skipping.  offset=%d len=%d",
-				line->line_number, entry->h_offset,
-				entry->pixel_width);
+			PRINT_DEBUG("VANC line %d would overflow thus skipping.  "
+			            "offset=%d len=%d",
+			    line->line_number, entry->h_offset, entry->pixel_width);
 			entry->pixel_width = 0;
 			continue;
 		}
@@ -188,22 +185,21 @@ int klvanc_generate_vanc_line(struct klvanc_context_s *ctx, struct klvanc_line_s
 	for (i = 0; i < line->num_entries; i++) {
 		struct klvanc_entry_s *entry = line->p_entries[i];
 		memcpy((*outbuf) + entry->h_offset, entry->payload,
-		       entry->pixel_width * (sizeof(uint16_t)));
+		    entry->pixel_width * (sizeof(uint16_t)));
 	}
 	return 0;
 }
 
 int klvanc_generate_vanc_line_v210(struct klvanc_context_s *ctx,
-                                   struct klvanc_line_s *line,
-                                   uint8_t *out_buf, int line_pixel_width)
+    struct klvanc_line_s *line, uint8_t *out_buf, int line_pixel_width)
 {
 	uint16_t *out_line;
 	int out_len;
 	int result;
 
 	/* Generate the full line taking into account all VANC packets on that line */
-	result = klvanc_generate_vanc_line(ctx, line, &out_line, &out_len,
-					   line_pixel_width);
+	result =
+	    klvanc_generate_vanc_line(ctx, line, &out_line, &out_len, line_pixel_width);
 	if (result != 0) {
 		return -ENOMEM;
 	}
