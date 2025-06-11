@@ -66,11 +66,11 @@ noinst_HEADERS += url.h
 noinst_HEADERS += version.h
 noinst_HEADERS += platform.h
 
-test: klvanc_eia708 klvanc_genscte104 klvanc_scte104 klvanc_smpte12_2 klvanc_afd klvanc_smpte2038 klvanc_gensmpte2038
-	./klvanc_eia708
-	./klvanc_genscte104
-	./klvanc_scte104
-	./klvanc_smpte12_2
-	./klvanc_gensmpte2038
-	./klvanc_afd
-	./klvanc_smpte2038 -i ../samples/smpte2038-sample-pid-01e9.ts -P 0x1e9
+test: klvanc_eia708$(EXEEXT) klvanc_genscte104$(EXEEXT) klvanc_scte104$(EXEEXT) klvanc_smpte12_2$(EXEEXT) klvanc_afd$(EXEEXT) klvanc_smpte2038$(EXEEXT) klvanc_gensmpte2038$(EXEEXT)
+	./klvanc_eia708$(EXEEXT)
+	./klvanc_genscte104$(EXEEXT)
+	./klvanc_scte104$(EXEEXT)
+	./klvanc_smpte12_2$(EXEEXT)
+	./klvanc_gensmpte2038$(EXEEXT)
+	./klvanc_afd$(EXEEXT)
+	./klvanc_smpte2038$(EXEEXT) -i ../samples/smpte2038-sample-pid-01e9.ts -P 0x1e9
